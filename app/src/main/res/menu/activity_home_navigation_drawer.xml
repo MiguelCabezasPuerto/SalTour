@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_inicio"
+            android:icon="@drawable/home_icon"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_jugar"
+            android:icon="@drawable/play_icon"
+            android:title="@string/menu_jugar" />
+    </group>
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/profile_icon"
+            android:title="@string/menu_perfil" />
+        <item
+            android:id="@+id/nav_ranking"
+            android:icon="@drawable/ranking_icon"
+            android:title="@string/menu_ranking" />
+    </group>
+
+    <item android:title="@string/menu_group">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_compartir"
+                    android:icon="@drawable/help_icon"
+                    android:title="@string/menu_compartir" />
+
+                <item
+                    android:id="@+id/nav_ayuda"
+                    android:icon="@drawable/help_icon"
+                    android:title="@string/menu_ayuda" />
+            </group>
+        </menu>
+    </item>
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_salir"
+            android:icon="@drawable/exit_icon"
+            android:title="@string/menu_salir" />
+    </group>
+
+</menu>

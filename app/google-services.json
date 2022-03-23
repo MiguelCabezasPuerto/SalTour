@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "640041497613",
+    "project_id": "saltour",
+    "storage_bucket": "saltour.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640041497613:android:59ead476c6b93bfc4f5144",
+        "android_client_info": {
+          "package_name": "com.miguelcabezas.tfm.saltour"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640041497613-b46umpfgkei0fh64h50h1lchdt1sd7bv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpuKjd3WJJH1xf2lvyuh3ngpkDnwiN69w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640041497613-b46umpfgkei0fh64h50h1lchdt1sd7bv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

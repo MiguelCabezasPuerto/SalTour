@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="app_name">SalTour</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_click">Title click</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_jugar">Jugar</string>
+    <string name="menu_perfil">Mi perfil</string>
+    <string name="menu_ranking">Estadísticas</string>
+    <string name="menu_compartir">Compartir</string>
+    <string name="menu_group">Social</string>
+    <string name="user">User</string>
+    <string name="menu_ayuda">Ayuda</string>
+    <string name="menu_salir">Salir</string>
+    <string name="tiene_dudas">¿Tiene alguna duda? Contacte con nosotros!</string>
+</resources>
