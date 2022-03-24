@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                                 contrasena.setText("");
                                 usuario.setBackgroundResource(0);
                                 contrasena.setBackgroundResource(0);
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                /*FirebaseStorage storage = FirebaseStorage.getInstance();
                                 StorageReference storageRef = storage.getReference();
                                 StorageReference userImageRef = storageRef.child("images/"+ currentUser.getEmail().toString()+".jpg");
                                 Uri file =  Uri.parse("android.resource://com.miguelcabezas.tfm.saltour/" + R.drawable.profile_icon);
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                                         // ...
                                         Toast.makeText(getApplicationContext(),"SUCCESS IMAGE",Toast.LENGTH_LONG).show();
                                     }
-                                });
+                                });*/
                                 Intent intent;
                                 intent=new Intent(getApplicationContext(),HomeActivity.class);
                                 startActivity(intent);
@@ -245,13 +245,31 @@ public class LoginActivity extends AppCompatActivity {
                                                         .setDisplayName(nombreUsuario)
                                                         .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
                                                         .build();
-                                                FirebaseUser currentUser = mAuth.getCurrentUser();
+                                                final FirebaseUser currentUser = mAuth.getCurrentUser();
                                                 currentUser.reload();
                                                 currentUser.updateProfile(profileUpdates)
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()) {
+                                                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                                    StorageReference storageRef = storage.getReference();
+                                                                    StorageReference userImageRef = storageRef.child("images/"+ currentUser.getEmail().toString()+".jpg");
+                                                                    Uri file =  Uri.parse("android.resource://com.miguelcabezas.tfm.saltour/" + R.drawable.profile_icon);
+                                                                    UploadTask uploadTask = userImageRef.putFile(file);
+                                                                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception exception) {
+                                                                            Toast.makeText(getApplicationContext(),"FAIL IMAGE",Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                        @Override
+                                                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                                                            // ...
+                                                                            Toast.makeText(getApplicationContext(),"SUCCESS IMAGE",Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    });
                                                                     Toast.makeText(LoginActivity.this,"Enviado correo de verificación",Toast.LENGTH_LONG).show();
                                                                 }
                                                             }

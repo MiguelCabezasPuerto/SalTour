@@ -164,6 +164,11 @@ public class HomeActivity extends AppCompatActivity
     //el drawer se ha abierto completamente
    /* Toast.makeText(this, getString(R.string.navigation_drawer_open),
             Toast.LENGTH_SHORT).show();*/
+    final FirebaseAuth mAuth;
+    mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    TextView user = view.findViewById(R.id.user);
+    user.setText(currentUser.getDisplayName().toString());
   }
 
   @Override
@@ -200,6 +205,7 @@ public class HomeActivity extends AppCompatActivity
     Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
     startActivityForResult(gallery, PICK_IMAGE);
   }
+
 
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);

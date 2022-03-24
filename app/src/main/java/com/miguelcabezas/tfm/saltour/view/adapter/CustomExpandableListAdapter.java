@@ -42,11 +42,16 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            /*Aqui la vista de cada elemento para hacerla bonita*/
+            /*Crear otra clase de estas para las respuestas y otro xml*/
             convertView = layoutInflater.inflate(R.layout.list_item, null);
         }
+        String[]challenge_time=expandedListText.split("#");
         TextView expandedListTextView = (TextView) convertView
                 .findViewById(R.id.expandedListItem);
-        expandedListTextView.setText(expandedListText);
+        TextView expandedListTextViewTime = (TextView) convertView.findViewById(R.id.expandedListItemTime);
+        expandedListTextView.setText(challenge_time[0]);
+        expandedListTextViewTime.setText(challenge_time[1]);
         return convertView;
     }
 
