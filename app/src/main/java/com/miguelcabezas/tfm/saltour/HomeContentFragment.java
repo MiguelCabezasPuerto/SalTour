@@ -41,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPump;
 import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapter;
+import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapterHelp;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -166,7 +167,7 @@ public class HomeContentFragment extends Fragment {
         expandableListView = (ExpandableListView) layout.findViewById(R.id.expandableListView);
         expandableListDetail = ExpandableListDataPump.getData();
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-        expandableListAdapter = new CustomExpandableListAdapter(this.getContext(), expandableListTitle, expandableListDetail);
+        expandableListAdapter = new CustomExpandableListAdapterHelp(this.getContext(), expandableListTitle, expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override

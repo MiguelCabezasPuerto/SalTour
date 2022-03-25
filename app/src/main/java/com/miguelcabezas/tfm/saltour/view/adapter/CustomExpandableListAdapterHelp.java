@@ -1,7 +1,5 @@
 package com.miguelcabezas.tfm.saltour.view.adapter;
 
-import java.util.HashMap;
-import java.util.List;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -12,13 +10,16 @@ import android.widget.TextView;
 
 import com.miguelcabezas.tfm.saltour.R;
 
-public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
+import java.util.HashMap;
+import java.util.List;
+
+public class CustomExpandableListAdapterHelp extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expandableListTitle;
     private HashMap<String, List<String>> expandableListDetail;
 
-    public CustomExpandableListAdapter(Context context, List<String> expandableListTitle,
-                                       HashMap<String, List<String>> expandableListDetail) {
+    public CustomExpandableListAdapterHelp(Context context, List<String> expandableListTitle,
+                                           HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
         this.expandableListTitle = expandableListTitle;
         this.expandableListDetail = expandableListDetail;
@@ -42,15 +43,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            /*Aqui la vista de cada elemento para hacerla bonita*/
-            convertView = layoutInflater.inflate(R.layout.list_item, null);
+            convertView = layoutInflater.inflate(R.layout.list_item_help, null);
         }
-        String[]challenge_time=expandedListText.split("#");
         TextView expandedListTextView = (TextView) convertView
                 .findViewById(R.id.expandedListItem);
-        TextView expandedListTextViewTime = (TextView) convertView.findViewById(R.id.expandedListItemTime);
-        expandedListTextView.setText(challenge_time[0]);
-        expandedListTextViewTime.setText(challenge_time[1]);
+        expandedListTextView.setText(expandedListText);
         return convertView;
     }
 
