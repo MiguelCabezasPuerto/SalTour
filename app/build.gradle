@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
 
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"
@@ -43,6 +44,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.10.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+
+    compile 'com.jude:rollviewpager:1.2.9'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 
 
 }

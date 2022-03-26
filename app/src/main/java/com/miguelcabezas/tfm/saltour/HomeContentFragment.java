@@ -3,6 +3,8 @@ package com.miguelcabezas.tfm.saltour;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.viewpager2.widget.ViewPager2;
@@ -36,12 +41,18 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.jude.rollviewpager.RollPagerView;
+import com.jude.rollviewpager.hintview.ColorPointHintView;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPump;
+import com.miguelcabezas.tfm.saltour.view.adapter.CarrouseelAdapter;
 import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapter;
 import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapterHelp;
+import com.miguelcabezas.tfm.saltour.view.animation.ProgressBarAnimation;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -49,6 +60,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+
 
 public class HomeContentFragment extends Fragment {
 
@@ -69,11 +82,13 @@ public class HomeContentFragment extends Fragment {
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+  public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable
           Bundle savedInstanceState) {
       FirebaseAuth mAuth;
       EditText usuario,contrasena,oldContrasena;
-      final ImageView fotoperfil;
+      TextView displayName;
+      final LinearLayout editProfilePanel;
+      final ImageView fotoperfil,editProfile;
     /*En funcion de la opción de menú pulsada se cargará un layout u otro*/
       ExpandableListView expandableListView;
       ExpandableListAdapter expandableListAdapter;
@@ -93,6 +108,10 @@ public class HomeContentFragment extends Fragment {
         oldContrasena=layout.findViewById(R.id.contrasena);
         usuario.setHint((currentUser.getDisplayName().toString()));
         fotoperfil=layout.findViewById(R.id.fotoperfil);
+        editProfile=layout.findViewById(R.id.edit_profile);
+        displayName=layout.findViewById(R.id.displayName);
+        editProfilePanel=layout.findViewById(R.id.edit_profile_panel);
+        displayName.setText(currentUser.getDisplayName().toString());
         /*FirebaseFirestore db = FirebaseFirestore.getInstance();*/
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -109,13 +128,17 @@ public class HomeContentFragment extends Fragment {
             }
         });
 
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfilePanel.setVisibility(View.VISIBLE);
+            }
+        });
+
         onClickGuardar(layout);
 
-
     }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_ranking))){
-       layout = inflater.inflate(R.layout.estadisticas_fragment, container, false);
-        setupViewPager(layout);
-        setupTabLayout(layout);
+        return cargarEstadisticas(layout,inflater,container);
     }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_compartir))){
        layout = inflater.inflate(R.layout.compartir_fragment, container, false);
        ImageView btn_whatsapp,btn_facebook,btn_gmail,btn_twitter,btn_compartir_otros;
@@ -194,6 +217,26 @@ public class HomeContentFragment extends Fragment {
         logout(mAuth);
     }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_home))){
        layout = inflater.inflate(R.layout.home_fragment, container, false);
+       updateProgressBar(layout);
+       /*Esto como guia para cargar un fragment desde otro fragment
+            AVISO: NO SE ACTUALIZA EL MENU LATERAL, PARA ESTADISTICAS GENERALES DE VER UN PERFIL AJENO SELECCIONADO ESTARIA BIEN*/
+       /*ProgressBar progressBar = layout.findViewById(R.id.progress_bar);
+       progressBar.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               View layoutNew = null;
+               FirebaseAuth mAuth = FirebaseAuth.getInstance();
+               Fragment fragment = HomeContentFragment.newInstance(getString(R.string.menu_ranking),mAuth.getCurrentUser().getDisplayName());
+               getActivity().getSupportFragmentManager()
+                       .beginTransaction()
+                       .setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                       .replace(R.id.home_content, fragment)
+                       .commit();
+               *//* DrawerLayout drawerLayout;
+
+               drawerLayout = getActivity().findViewById(R.id.drawer_layout);*//*
+           }
+       });*/
     }
 
 
@@ -205,8 +248,55 @@ public class HomeContentFragment extends Fragment {
     return layout;
   }
 
+  private View cargarEstadisticas(View layout,LayoutInflater inflater, ViewGroup container){
+      layout = inflater.inflate(R.layout.estadisticas_fragment, container, false);
+      setupViewPager(layout);
+      setupTabLayout(layout);
+      return layout;
+  }
+
+  private void updateProgressBar(final View layout){
+      final ProgressBar progressBar = (ProgressBar) layout.findViewById(R.id.progress_bar);
+      final TextView textView = (TextView) layout.findViewById(R.id.text_view_progress);
+      final TextView bienvenidaUsuario = layout.findViewById(R.id.t_bienvenido);
+      final TextView ultimoJuego = layout.findViewById(R.id.t_ultimo_juego);
+      final TextView tProgreso = layout.findViewById(R.id.t_progreso);
+
+      final FirebaseFirestore db = FirebaseFirestore.getInstance();
+      CollectionReference challenegesRef = db.collection("challenges");
+      challenegesRef.get()
+              .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                  @Override
+                  public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                      long totalChallenges = task.getResult().size();
+                      FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                      FirebaseUser currentUser = mAuth.getCurrentUser();
+                      bienvenidaUsuario.setText("Hola "+currentUser.getDisplayName());
+                      ultimoJuego.setText("Última conexión: 15/03/2022");
+                      tProgreso.setText("Progreso personal");
+                      SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
+                      Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
+                      long challengesCompleted = challengesAndTime.size();
+                      long percentageCompleted = calculatePercentage(challengesCompleted,totalChallenges);
+                      ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, 0, percentageCompleted);
+                      anim.setDuration(1000);
+                      progressBar.startAnimation(anim);
+                      textView.setText(String.valueOf(percentageCompleted)+"% de los retos");
+
+                      RollPagerView rollPagerView = layout.findViewById(R.id.roll_view_pager);
+                      rollPagerView.setPlayDelay(3000);
+                      rollPagerView.setAnimationDurtion(500);
+                      rollPagerView.setAdapter(new CarrouseelAdapter());
+                      rollPagerView.setHintView(new ColorPointHintView(getContext(), Color.RED,Color.WHITE));
+                  }
+              });
 
 
+  }
+
+  private long calculatePercentage(long actual,long total){
+      return (actual*100)/total;
+  }
 
 
   private void logout(final FirebaseAuth mAuth) {
@@ -230,7 +320,7 @@ public class HomeContentFragment extends Fragment {
     }
 
 
-    private void onClickGuardar(View layout) {
+    private void onClickGuardar(final View layout) {
         final FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -251,7 +341,8 @@ public class HomeContentFragment extends Fragment {
                         FirebaseUser currentUser = mAuth.getCurrentUser();
                         currentUser.reload();
                         currentUser.updateProfile(profileUpdates);
-
+                        TextView displayName = layout.findViewById(R.id.displayName);
+                        displayName.setText(nuevoUsuario);
                 }
                 if(nuevaContrasena!=null && !nuevaContrasena.isEmpty()){
                     if(nuevaContrasena.length()<8){
@@ -287,6 +378,8 @@ public class HomeContentFragment extends Fragment {
                                 }
                             });
                 }
+                LinearLayout editProfilePanel = layout.findViewById(R.id.edit_profile_panel);
+                editProfilePanel.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(),"Datos actualizados",Toast.LENGTH_LONG).show();
 
             }

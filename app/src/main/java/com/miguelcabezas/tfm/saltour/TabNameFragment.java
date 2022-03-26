@@ -173,6 +173,28 @@ public class TabNameFragment extends Fragment {
                                         t_jugador.setTypeface(null, Typeface.BOLD);
                                         t_activos.setText("Jugadores activos: "+activeUsers);
                                     }
+                                    switch (ownPosition){
+                                        case 1:
+                                            t_jugador.setText("");
+                                            t_jugador1.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                            t_jugador1.setTypeface(null, Typeface.BOLD);
+                                            t_activos.setText("Jugadores activos: "+activeUsers);
+                                            break;
+                                        case 2:
+                                            t_jugador.setText("");
+                                            t_jugador2.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                            t_jugador2.setTypeface(null, Typeface.BOLD);
+                                            t_activos.setText("Jugadores activos: "+activeUsers);
+                                            break;
+                                        case 3:
+                                            t_jugador.setText("");
+                                            t_jugador3.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                            t_jugador3.setTypeface(null, Typeface.BOLD);
+                                            t_activos.setText("Jugadores activos: "+activeUsers);
+                                            break;
+                                        default:
+                                            break;
+                                    }
 
 
                                 }

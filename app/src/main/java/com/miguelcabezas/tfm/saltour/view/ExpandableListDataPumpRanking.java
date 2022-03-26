@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcabezas.tfm.saltour.model.User;
+import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +38,24 @@ public class ExpandableListDataPumpRanking {
         Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
         if(challengesAndTime!=null && !challengesAndTime.isEmpty()){
             List<String> items = new ArrayList<>(challengesAndTime);
-            expandableListDetail.put("Retos completados("+ items.size()+")", items);
+            List<String>itemsFinal = new ArrayList<>();
+            for(String item : items){
+                String[]claves = item.split("#");
+                String clave = claves[0];
+                Log.e("clave", clave);
+                if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.JARDIN))){
+                    itemsFinal.add("El jardín secreto#"+claves[1]);
+                }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.PENGUIN))){
+                    itemsFinal.add("Los pingüinos callejeros#"+claves[1]);
+                }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.PLAZA))){
+                    itemsFinal.add("Los medallones de la plaza Mayor#"+claves[1]);
+                }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.RANA))){
+                    itemsFinal.add("La rana de Salamanca#"+claves[1]);
+                }else{
+                    itemsFinal.add(item+"#"+claves[1]);
+                }
+            }
+            expandableListDetail.put("Retos completados("+ items.size()+")", itemsFinal);
         }else{
             expandableListDetail.put("Retos completados(0)", new ArrayList<String>());
         }

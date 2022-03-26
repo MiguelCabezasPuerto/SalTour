@@ -179,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                                                             set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
                                                         }
                                                     }
+
                                                     SharedPreferences myPrefs = getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
                                                     SharedPreferences.Editor editor = myPrefs.edit();
                                                     editor.putStringSet("ChallenegesCompleted#"+currentUser.getEmail(),set);
