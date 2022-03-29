@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    cardUseCompatPadding="true"
+    cardElevation="4dp"
+    cardCornerRadius="3dp"
+    android:layout_margin="6dp">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dp"
+        >
+
+        <TextView
+            android:id="@+id/t_challenge_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"></TextView>
+
+        <ImageButton
+            android:id="@+id/b_play"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="0dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/menu_jugar"
+            android:src="@drawable/play_icon"
+            tools:src="@drawable/play_icon"></ImageButton>
+
+
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>

@@ -1,16 +1,23 @@
 package com.miguelcabezas.tfm.saltour;
 
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
@@ -18,6 +25,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,14 +33,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -43,12 +59,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.hintview.ColorPointHintView;
+import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPump;
+import com.miguelcabezas.tfm.saltour.view.adapter.AdapterChallenges;
 import com.miguelcabezas.tfm.saltour.view.adapter.CarrouseelAdapter;
 import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapter;
 import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapterHelp;
@@ -60,6 +79,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -67,6 +87,8 @@ public class HomeContentFragment extends Fragment {
 
   private static final String TEXT = "text";
   private static final String USER = "user";
+  String token = "";
+  String tokenanterior = "";
   private ViewPager2 viewPager;
     private TabLayout tabLayout;
 
@@ -97,8 +119,55 @@ public class HomeContentFragment extends Fragment {
         View layout = null;
 
     if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_jugar))){
-       layout = inflater.inflate(R.layout.home_fragment, container, false);
-    }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_perfil))){
+       layout = inflater.inflate(R.layout.jugar_fragment, container, false);
+       Button btnEscanear = layout.findViewById(R.id.boton_escanear);
+       // int id = R.layout.challenge;
+        // ViewGroup layoutChallengeGroup;
+       // layoutChallengeGroup = (ViewGroup) layout.findViewById(R.id.content);
+        //for(int i=0;i<4;i++){
+        final RecyclerView mRecyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view_challenges);
+            /*mRecyclerView.setHasFixedSize(true);*/
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(layoutManager);
+
+        final ArrayList<String> myDataSet=new ArrayList<>();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference challenegesRef = db.collection("challenges");
+        challenegesRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            myDataSet.add(document.get("name").toString());
+                        }
+                        AdapterChallenges mAdapter = new AdapterChallenges(myDataSet,getContext());
+                        mRecyclerView.setAdapter(mAdapter);
+                    }
+                });
+
+
+            /*TextView textView = (TextView) recyclerView.findViewById(R.id.challenge_id);*/
+            //textView.setText("Reto "+i);
+           /* layoutChallengeGroup.addView(mRecyclerView);*/
+       // }
+       btnEscanear.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               FirebaseAuth mAuth = FirebaseAuth.getInstance();
+               Fragment fragment = HomeContentFragment.newInstance("QR",mAuth.getCurrentUser().getDisplayName());
+               getActivity().getSupportFragmentManager()
+                       .beginTransaction()
+                       .setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                       .replace(R.id.home_content, fragment)
+                       .commit();
+           }
+       });
+    }else if(getArguments().getString(TEXT).equalsIgnoreCase("QR")){
+        layout = inflater.inflate(R.layout.qr_fragment, container, false);
+        SurfaceView cameraView = (SurfaceView) layout.findViewById(R.id.camera_view);
+        initQR(cameraView);
+    }
+    else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_perfil))){
        layout = inflater.inflate(R.layout.perfil_fragment, container, false);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -457,5 +526,120 @@ public class HomeContentFragment extends Fragment {
 
     }
 
+
+
+
+
+    public void initQR(final SurfaceView cameraView) {
+
+        // creo el detector qr
+        BarcodeDetector barcodeDetector =
+                new BarcodeDetector.Builder(getContext())
+                        .setBarcodeFormats(Barcode.ALL_FORMATS)
+                        .build();
+
+        // creo la camara
+        final CameraSource cameraSource = new CameraSource
+                .Builder(getContext(), barcodeDetector)
+                .setRequestedPreviewSize(1600, 1024)
+                .setAutoFocusEnabled(true) //you should add this feature
+                .build();
+
+        // listener de ciclo de vida de la camara
+        cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+
+                // verifico si el usuario dio los permisos para la camara
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        // verificamos la version de ANdroid que sea al menos la M para mostrar
+                        // el dialog de la solicitud de la camara
+                        if (shouldShowRequestPermissionRationale(
+                                Manifest.permission.CAMERA)) ;
+                        requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                101);
+                    }
+                    return;
+                } else {
+                    try {
+                        cameraSource.start(cameraView.getHolder());
+                    } catch (IOException ie) {
+                        Log.e("CAMERA SOURCE", ie.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                cameraSource.stop();
+            }
+        });
+
+        // preparo el detector de QR
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+            }
+
+
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+                final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+
+                if (barcodes.size() > 0) {
+
+                    // obtenemos el token
+                    token = barcodes.valueAt(0).displayValue.toString();
+
+                    // verificamos que el token anterior no se igual al actual
+                    // esto es util para evitar multiples llamadas empleando el mismo token
+                    if (!token.equals(tokenanterior)) {
+
+                        // guardamos el ultimo token proceado
+                        tokenanterior = token;
+                        Log.i("token", token);
+
+                        if (URLUtil.isValidUrl(token)) {
+                            // si es una URL valida abre el navegador
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(token));
+                            startActivity(browserIntent);
+                        } else {
+                            // QR generados para los retos, aqui llamar a la AR adecuada en funcion del reto que sea y parar el tiempo para ese reto
+                            if(token.equalsIgnoreCase("Catedral")){
+                                Log.e("RETO","Catedral");
+                            }else{
+                                Log.e("RETO","Otros retos");
+                            }
+                        }
+
+                        new Thread(new Runnable() {
+                            public void run() {
+                                try {
+                                    synchronized (this) {
+                                        wait(5000);
+                                        // limpiamos el token
+                                        tokenanterior = "";
+                                    }
+                                } catch (InterruptedException e) {
+                                    // TODO Auto-generated catch block
+                                    Log.e("Error", "Waiting didnt work!!");
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+
+                    }
+                }
+            }
+        });
+
+    }
 }
 
