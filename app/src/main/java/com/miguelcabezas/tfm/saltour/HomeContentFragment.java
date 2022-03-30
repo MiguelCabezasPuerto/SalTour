@@ -59,12 +59,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.hintview.ColorPointHintView;
+import com.miguelcabezas.tfm.saltour.model.Challenge;
 import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPump;
 import com.miguelcabezas.tfm.saltour.view.adapter.AdapterChallenges;
@@ -130,17 +132,24 @@ public class HomeContentFragment extends Fragment {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(layoutManager);
 
-        final ArrayList<String> myDataSet=new ArrayList<>();
+        final ArrayList<Map<String, GeoPoint>> myDataSet = new ArrayList<>();
+        final ArrayList<Challenge> challenges = new ArrayList<>();
+        /*final ArrayList<String> myDataSet=new ArrayList<>();*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference challenegesRef = db.collection("challenges");
+        final CollectionReference challenegesRef = db.collection("challenges");
         challenegesRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            myDataSet.add(document.get("name").toString());
+                            Map<String,GeoPoint> map = new HashMap<>();
+                           map.put(document.get("name").toString(), (GeoPoint) document.get("geolocation"));
+                           myDataSet.add(map);
+                           String lat = String.valueOf(((GeoPoint) document.get("geolocation")).getLatitude());
+                           String lon = String.valueOf(((GeoPoint) document.get("geolocation")).getLongitude());
+                           challenges.add(new Challenge(document.get("name").toString(),lat,lon));
                         }
-                        AdapterChallenges mAdapter = new AdapterChallenges(myDataSet,getContext());
+                        AdapterChallenges mAdapter = new AdapterChallenges(myDataSet,getContext(),challenges);
                         mRecyclerView.setAdapter(mAdapter);
                     }
                 });
@@ -345,7 +354,14 @@ public class HomeContentFragment extends Fragment {
                       tProgreso.setText("Progreso personal");
                       SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
                       Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
-                      long challengesCompleted = challengesAndTime.size();
+                      long challengesCompleted = 0;
+                      for(String challenge : challengesAndTime){
+                          String [] partes = challenge.split("#");
+                          if(partes[1].contains("C")){
+                              challengesCompleted++;
+                          }
+                      }
+
                       long percentageCompleted = calculatePercentage(challengesCompleted,totalChallenges);
                       ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, 0, percentageCompleted);
                       anim.setDuration(1000);

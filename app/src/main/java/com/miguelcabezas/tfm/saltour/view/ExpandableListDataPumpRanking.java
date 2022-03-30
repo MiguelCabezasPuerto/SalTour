@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class ExpandableListDataPumpRanking {
@@ -39,25 +40,48 @@ public class ExpandableListDataPumpRanking {
         if(challengesAndTime!=null && !challengesAndTime.isEmpty()){
             List<String> items = new ArrayList<>(challengesAndTime);
             List<String>itemsFinal = new ArrayList<>();
+            List<String>itemsEnCurso = new ArrayList<>();
             for(String item : items){
                 String[]claves = item.split("#");
                 String clave = claves[0];
                 Log.e("clave", clave);
                 if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.JARDIN))){
-                    itemsFinal.add("El jardín secreto#"+claves[1]);
+                    if(claves[1].contains("C")){
+                        String tiempo = claves[1].replaceFirst(".$","");
+                        itemsFinal.add("El jardín secreto#"+tiempo);
+                    }else{
+                        itemsEnCurso.add("El jardín secreto#"+claves[1]);
+                    }
                 }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.PENGUIN))){
-                    itemsFinal.add("Los pingüinos callejeros#"+claves[1]);
+                    if(claves[1].contains("C")){
+                        String tiempo = claves[1].replaceFirst(".$","");
+                        itemsFinal.add("Los pingüinos callejeros#"+tiempo);
+                    }else{
+                        itemsEnCurso.add("Los pingüinos callejeros#"+claves[1]);
+                    }
                 }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.PLAZA))){
-                    itemsFinal.add("Los medallones de la plaza Mayor#"+claves[1]);
+                    if(claves[1].contains("C")){
+                        String tiempo = claves[1].replaceFirst(".$","");
+                        itemsFinal.add("Los medallones de la plaza Mayor#"+tiempo);
+                    }else{
+                        itemsEnCurso.add("Los medallones de la plaza Mayor#"+claves[1]);
+                    }
                 }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.RANA))){
-                    itemsFinal.add("La rana de Salamanca#"+claves[1]);
+                    if(claves[1].contains("C")){
+                        String tiempo = claves[1].replaceFirst(".$","");
+                        itemsFinal.add("La rana de Salamanca#"+tiempo);
+                    }else{
+                        itemsEnCurso.add("La rana de Salamanca#"+claves[1]);
+                    }
                 }else{
                     itemsFinal.add(item+"#"+claves[1]);
                 }
             }
-            expandableListDetail.put("Retos completados("+ items.size()+")", itemsFinal);
+            expandableListDetail.put("Retos completados("+ itemsFinal.size()+")", itemsFinal);
+            expandableListDetail.put("Retos en curso("+ itemsEnCurso.size()+")", itemsEnCurso);
         }else{
             expandableListDetail.put("Retos completados(0)", new ArrayList<String>());
+            expandableListDetail.put("Retos en curso(0)", new ArrayList<String>());
         }
 
         Log.e("List detail",expandableListDetail.toString());

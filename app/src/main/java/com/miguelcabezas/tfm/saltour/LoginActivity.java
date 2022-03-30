@@ -168,13 +168,13 @@ public class LoginActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     ArrayList<String> items = new ArrayList();
-                                                    Map<String, Long> challengesAnTime = new HashMap<>();
+                                                    Map<String, String> challengesAnTime = new HashMap<>();
                                                     Set<String>set = new HashSet<>();
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                                         Log.e("Map",document.getData().get("challengesAndTime").toString());
                                                         ObjectMapper oMapper = new ObjectMapper();
                                                         challengesAnTime = oMapper.convertValue(document.getData().get("challengesAndTime"), Map.class);
-                                                        for (Map.Entry<String, Long> entry : challengesAnTime.entrySet()) {
+                                                        for (Map.Entry<String, String> entry : challengesAnTime.entrySet()) {
                                                             Log.e(entry.getKey(), String.valueOf(entry.getValue()));
                                                             set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
                                                         }
@@ -328,7 +328,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                     newUser.put("email", currentUser.getEmail());
                                                                     newUser.put("challengesCompleted", 0);
                                                                     newUser.put("totalTime", 0);
-                                                                    newUser.put("challengesAndTime",new HashMap<String,Long>());
+                                                                    newUser.put("challengesAndTime",new HashMap<String,String>());
                                                                     db.collection("users").add(newUser);
                                                                     Toast.makeText(LoginActivity.this,"Enviado correo de verificación",Toast.LENGTH_LONG).show();
                                                                 }
