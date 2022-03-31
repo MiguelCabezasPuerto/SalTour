@@ -42,6 +42,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -93,6 +97,7 @@ public class HomeContentFragment extends Fragment {
   String tokenanterior = "";
   private ViewPager2 viewPager;
     private TabLayout tabLayout;
+    private GoogleMap mapa;
 
   public static HomeContentFragment newInstance(String text,String user) {
     HomeContentFragment frag = new HomeContentFragment();
@@ -101,6 +106,9 @@ public class HomeContentFragment extends Fragment {
     args.putString(TEXT, text);
     args.putString(USER,user);
     frag.setArguments(args);
+
+
+
 
     return frag;
   }
@@ -119,6 +127,8 @@ public class HomeContentFragment extends Fragment {
       List<String> expandableListTitle;
       final HashMap<String, List<String>> expandableListDetail;
         View layout = null;
+
+
 
     if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_jugar))){
        layout = inflater.inflate(R.layout.jugar_fragment, container, false);
@@ -149,7 +159,7 @@ public class HomeContentFragment extends Fragment {
                            String lon = String.valueOf(((GeoPoint) document.get("geolocation")).getLongitude());
                            challenges.add(new Challenge(document.get("name").toString(),lat,lon));
                         }
-                        AdapterChallenges mAdapter = new AdapterChallenges(myDataSet,getContext(),challenges);
+                        AdapterChallenges mAdapter = new AdapterChallenges(myDataSet,getContext(),challenges,inflater,container,getActivity());
                         mRecyclerView.setAdapter(mAdapter);
                     }
                 });
@@ -175,8 +185,12 @@ public class HomeContentFragment extends Fragment {
         layout = inflater.inflate(R.layout.qr_fragment, container, false);
         SurfaceView cameraView = (SurfaceView) layout.findViewById(R.id.camera_view);
         initQR(cameraView);
-    }
-    else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_perfil))){
+    }else if(getArguments().getString(TEXT).equalsIgnoreCase("Map")){
+        Intent intent;
+        intent=new Intent(getContext(),MapsActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    } else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_perfil))){
        layout = inflater.inflate(R.layout.perfil_fragment, container, false);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -657,5 +671,6 @@ public class HomeContentFragment extends Fragment {
         });
 
     }
+
 }
 

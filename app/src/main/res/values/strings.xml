@@ -18,4 +18,5 @@
     <string name="tiene_dudas">¿Tiene alguna duda? Contacte con nosotros!</string>
     <string name="estadistica_individual">Individual</string>
     <string name="estadistica_general">General</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

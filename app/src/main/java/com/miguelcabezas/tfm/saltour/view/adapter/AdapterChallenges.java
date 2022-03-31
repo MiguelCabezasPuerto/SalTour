@@ -2,6 +2,7 @@ package com.miguelcabezas.tfm.saltour.view.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -13,11 +14,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
+import com.miguelcabezas.tfm.saltour.HomeContentFragment;
+import com.miguelcabezas.tfm.saltour.MapsActivity;
 import com.miguelcabezas.tfm.saltour.R;
 import com.miguelcabezas.tfm.saltour.model.Challenge;
 
@@ -31,6 +36,10 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
     private ArrayList<Map<String,GeoPoint>> mDataSet;
     Context context;
     ArrayList<Challenge>allChallenges;
+    LayoutInflater inflater;
+    ViewGroup container;
+    View layout;
+    FragmentActivity parentActivity;
 
     // Obtener referencias de los componentes visuales para cada elemento
     // Es decir, referencias de los EditText, TextViews, Buttons
@@ -45,11 +54,14 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
     }
 
     // Este es nuestro constructor (puede variar según lo que queremos mostrar)
-    public AdapterChallenges(ArrayList<Map<String,GeoPoint>> myDataSet,Context context,ArrayList<Challenge>challenges) {
+    public AdapterChallenges(ArrayList<Map<String,GeoPoint>> myDataSet,Context context,ArrayList<Challenge>challenges,LayoutInflater inflater,ViewGroup container,FragmentActivity activity) {
         mDataSet = myDataSet;
         this.context = context;
         this.allChallenges = new ArrayList<>();
         this.allChallenges.addAll(challenges);
+        this.inflater = inflater;
+        this.container = container;
+        this.parentActivity = activity;
     }
 
     // El layout manager invoca este método
@@ -119,6 +131,21 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
             @Override
             public void onClick(View v) {
                 Log.e("Boton del reto", allChallenges.get(v.getId()).getName());
+                /*FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                Fragment fragment = HomeContentFragment.newInstance("Map",mAuth.getCurrentUser().getDisplayName());
+                parentActivity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                        .replace(R.id.home_content, fragment)
+                        .commit();*/
+                Intent intent;
+                intent=new Intent(context,MapsActivity.class);
+                intent.putExtra("latitude",allChallenges.get(v.getId()).getLatitude());
+                intent.putExtra("longitude",allChallenges.get(v.getId()).getLongitude());
+                intent.putExtra("name",allChallenges.get(v.getId()).getName());
+                context.startActivity(intent);
+                parentActivity.finish();
+
             }
         });
         textView.setText(mDataSet.get(position).keySet().toArray()[0].toString());
