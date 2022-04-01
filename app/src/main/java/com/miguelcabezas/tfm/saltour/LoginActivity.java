@@ -329,7 +329,8 @@ public class LoginActivity extends AppCompatActivity {
                                                                     newUser.put("challengesCompleted", 0);
                                                                     newUser.put("totalTime", 0);
                                                                     newUser.put("challengesAndTime",new HashMap<String,String>());
-                                                                    db.collection("users").add(newUser);
+                                                                    db.collection("users").document(currentUser.getEmail()).set(newUser);
+                                                                    /*db.collection("users").add(newUser);*/
                                                                     Toast.makeText(LoginActivity.this,"Enviado correo de verificación",Toast.LENGTH_LONG).show();
                                                                 }
                                                             }

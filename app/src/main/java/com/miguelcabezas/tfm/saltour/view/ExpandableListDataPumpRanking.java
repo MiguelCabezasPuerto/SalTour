@@ -45,36 +45,42 @@ public class ExpandableListDataPumpRanking {
                 String[]claves = item.split("#");
                 String clave = claves[0];
                 Log.e("clave", clave);
-                if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.JARDIN))){
+                Log.e("valor", claves[1]);
+                if(clave.contains(String.valueOf(EnumRetos.jardín))){
                     if(claves[1].contains("C")){
                         String tiempo = claves[1].replaceFirst(".$","");
                         itemsFinal.add("El jardín secreto#"+tiempo);
+                        Log.e(claves[1], "contiene la C");
                     }else{
                         itemsEnCurso.add("El jardín secreto#"+claves[1]);
                     }
-                }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.PENGUIN))){
+                }else if(clave.contains(String.valueOf(EnumRetos.callejeros))){
                     if(claves[1].contains("C")){
                         String tiempo = claves[1].replaceFirst(".$","");
                         itemsFinal.add("Los pingüinos callejeros#"+tiempo);
+                        Log.e(claves[1], "contiene la C");
                     }else{
                         itemsEnCurso.add("Los pingüinos callejeros#"+claves[1]);
                     }
-                }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.PLAZA))){
+                }else if(clave.contains(String.valueOf(EnumRetos.plaza))){
                     if(claves[1].contains("C")){
                         String tiempo = claves[1].replaceFirst(".$","");
                         itemsFinal.add("Los medallones de la plaza Mayor#"+tiempo);
+                        Log.e(claves[1], "contiene la C");
                     }else{
                         itemsEnCurso.add("Los medallones de la plaza Mayor#"+claves[1]);
                     }
-                }else if(clave.equalsIgnoreCase(String.valueOf(EnumRetos.RANA))){
+                }else if(clave.contains(String.valueOf(EnumRetos.rana))){
                     if(claves[1].contains("C")){
                         String tiempo = claves[1].replaceFirst(".$","");
                         itemsFinal.add("La rana de Salamanca#"+tiempo);
+                        Log.e(claves[1], "contiene la C");
                     }else{
                         itemsEnCurso.add("La rana de Salamanca#"+claves[1]);
                     }
                 }else{
                     itemsFinal.add(item+"#"+claves[1]);
+                    Log.e(claves[1], "ELSE");
                 }
             }
             expandableListDetail.put("Retos completados("+ itemsFinal.size()+")", itemsFinal);

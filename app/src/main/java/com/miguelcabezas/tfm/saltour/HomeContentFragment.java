@@ -2,6 +2,8 @@ package com.miguelcabezas.tfm.saltour;
 
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -70,6 +73,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.hintview.ColorPointHintView;
+import com.miguelcabezas.tfm.saltour.controller.service.CountTimeService;
+import com.miguelcabezas.tfm.saltour.model.ActiveChallengeSingleton;
 import com.miguelcabezas.tfm.saltour.model.Challenge;
 import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPump;
@@ -133,6 +138,16 @@ public class HomeContentFragment extends Fragment {
     if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_jugar))){
        layout = inflater.inflate(R.layout.jugar_fragment, container, false);
        Button btnEscanear = layout.findViewById(R.id.boton_escanear);
+       Button btnParar = layout.findViewById(R.id.boton_parar);
+
+        if(isAServiceRunning(CountTimeService.class)){
+            btnParar.setVisibility(View.VISIBLE);
+            btnParar.setEnabled(true);
+        }else{
+            btnParar.setVisibility(View.INVISIBLE);
+            btnParar.setEnabled(false);
+        }
+       ;
        // int id = R.layout.challenge;
         // ViewGroup layoutChallengeGroup;
        // layoutChallengeGroup = (ViewGroup) layout.findViewById(R.id.content);
@@ -147,6 +162,7 @@ public class HomeContentFragment extends Fragment {
         /*final ArrayList<String> myDataSet=new ArrayList<>();*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference challenegesRef = db.collection("challenges");
+        final View finalLayout = layout;
         challenegesRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -159,7 +175,7 @@ public class HomeContentFragment extends Fragment {
                            String lon = String.valueOf(((GeoPoint) document.get("geolocation")).getLongitude());
                            challenges.add(new Challenge(document.get("name").toString(),lat,lon));
                         }
-                        AdapterChallenges mAdapter = new AdapterChallenges(myDataSet,getContext(),challenges,inflater,container,getActivity());
+                        AdapterChallenges mAdapter = new AdapterChallenges(myDataSet,getContext(),challenges,inflater,container,getActivity(), finalLayout);
                         mRecyclerView.setAdapter(mAdapter);
                     }
                 });
@@ -181,6 +197,24 @@ public class HomeContentFragment extends Fragment {
                        .commit();
            }
        });
+
+       btnParar.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Log.d("b_parar","Parar el tiempo del reto");
+               if(isAServiceRunning(CountTimeService.class)){
+                   getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                   v.setVisibility(View.INVISIBLE);
+                   v.setEnabled(false);
+                   Toast.makeText(getContext(),"Tiempo detenido",Toast.LENGTH_LONG).show();
+               }
+              /* long startTime = SystemClock.elapsedRealtime();
+               long endTime = SystemClock.elapsedRealtime();
+               long elapsedMilliSeconds = endTime - startTime;
+               double elapsedSeconds = elapsedMilliSeconds / 1000.0;*/
+           }
+       });
+
     }else if(getArguments().getString(TEXT).equalsIgnoreCase("QR")){
         layout = inflater.inflate(R.layout.qr_fragment, container, false);
         SurfaceView cameraView = (SurfaceView) layout.findViewById(R.id.camera_view);
@@ -641,9 +675,16 @@ public class HomeContentFragment extends Fragment {
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(token));
                             startActivity(browserIntent);
                         } else {
+                            ActiveChallengeSingleton activeChallengeSingleton = ActiveChallengeSingleton.getInstance();
                             // QR generados para los retos, aqui llamar a la AR adecuada en funcion del reto que sea y parar el tiempo para ese reto
-                            if(token.equalsIgnoreCase("Catedral")){
-                                Log.e("RETO","Catedral");
+                            if(token.equalsIgnoreCase("rana")){
+                                Log.e("RETO","rana");
+                                if(activeChallengeSingleton.getName().contains(token)){
+                                    Log.d("Reto","parado");
+                                }else{
+                                    Log.d("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
                             }else{
                                 Log.e("RETO","Otros retos");
                             }
@@ -671,6 +712,17 @@ public class HomeContentFragment extends Fragment {
         });
 
     }
+
+    private boolean isAServiceRunning(Class<?> serviceClass) {
+      ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+      for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+          if (serviceClass.getName().equals(service.service.getClassName())) {
+              return true;
+          }
+      }
+      return false;
+  }
+
 
 }
 
