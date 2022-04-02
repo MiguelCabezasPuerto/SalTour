@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.SparseArray;
@@ -65,6 +66,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -89,6 +92,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -121,7 +125,7 @@ public class HomeContentFragment extends Fragment {
   @Override
   public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable
           Bundle savedInstanceState) {
-      FirebaseAuth mAuth;
+      final FirebaseAuth mAuth;
       EditText usuario,contrasena,oldContrasena;
       TextView displayName;
       final LinearLayout editProfilePanel;
@@ -203,10 +207,12 @@ public class HomeContentFragment extends Fragment {
            public void onClick(View v) {
                Log.d("b_parar","Parar el tiempo del reto");
                if(isAServiceRunning(CountTimeService.class)){
+                   ActiveChallengeSingleton activeChallengeSingleton = ActiveChallengeSingleton.getInstance();
                    getActivity().stopService(new Intent(getContext(), CountTimeService.class));
                    v.setVisibility(View.INVISIBLE);
                    v.setEnabled(false);
-                   Toast.makeText(getContext(),"Tiempo detenido",Toast.LENGTH_LONG).show();
+                   FirebaseAuth auth = FirebaseAuth.getInstance();
+                   getActivity().runOnUiThread(esperarYActualizarPreferences(3000,auth.getCurrentUser().getEmail(),activeChallengeSingleton.getName()));
                }
               /* long startTime = SystemClock.elapsedRealtime();
                long endTime = SystemClock.elapsedRealtime();
@@ -657,6 +663,10 @@ public class HomeContentFragment extends Fragment {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                String emailUser= currentUser.getEmail();
+
                 if (barcodes.size() > 0) {
 
                     // obtenemos el token
@@ -677,16 +687,58 @@ public class HomeContentFragment extends Fragment {
                         } else {
                             ActiveChallengeSingleton activeChallengeSingleton = ActiveChallengeSingleton.getInstance();
                             // QR generados para los retos, aqui llamar a la AR adecuada en funcion del reto que sea y parar el tiempo para ese reto
-                            if(token.equalsIgnoreCase("rana")){
-                                Log.e("RETO","rana");
+                            if(token.equalsIgnoreCase(String.valueOf(EnumRetos.rana))){
+                                Log.d("RETO","rana");
+                                if(activeChallengeSingleton.getName().contains(token)){
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+
+                                    }
+                                }else{
+                                    Log.e("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
+                            }else if(token.equalsIgnoreCase(String.valueOf(EnumRetos.plaza))){
+                                Log.e("RETO","plaza");
                                 if(activeChallengeSingleton.getName().contains(token)){
                                     Log.d("Reto","parado");
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                    }
                                 }else{
-                                    Log.d("Reto","No es el reto iniciado");
+                                    Log.e("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
+                            }else if(token.equalsIgnoreCase(String.valueOf(EnumRetos.jardín))){
+                                Log.d("RETO","jardin");
+                                if(activeChallengeSingleton.getName().contains(token)){
+                                    Log.d("Reto","parado");
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                    }
+                                }else{
+                                    Log.e("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
+                            }else if(token.equalsIgnoreCase(String.valueOf(EnumRetos.callejeros))){
+                                Log.d("RETO","pingüinos");
+                                if(activeChallengeSingleton.getName().contains(token)){
+                                    Log.d("Reto","parado");
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                    }
+                                }else{
+                                    Log.e("Reto","No es el reto iniciado");
                                     Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
                                 }
                             }else{
-                                Log.e("RETO","Otros retos");
+                                Log.e("Reto","No es el reto iniciado");
+                                Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
                             }
                         }
 
@@ -722,6 +774,106 @@ public class HomeContentFragment extends Fragment {
       }
       return false;
   }
+
+  private void updateUserData(final String emailUser, final String challengeName){
+      FirebaseFirestore db = FirebaseFirestore.getInstance();
+      CollectionReference dbUsers = db.collection("users");
+
+      final DocumentReference userSelected = db.collection("users").document(emailUser);
+
+      /*userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime"))+difference)/(((Long)document.get("challengesCompleted"))+1));*//*Esto lo hara la actividad de escaner en caso de reto completado*/
+      /*userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);*//*Esto lo hara la actividad de escaner en caso de reto completado*/
+      userSelected.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+          @Override
+          public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+              DocumentSnapshot document = task.getResult();
+              if(document.exists()){
+                  Map<String,String> challengesAndTime = (Map<String, String>) document.get("challengesAndTime");
+                  if(challengesAndTime != null && !challengesAndTime.isEmpty() && challengesAndTime.get(challengeName)!=null){
+                      String tiempo = challengesAndTime.get(challengeName);
+                      challengesAndTime.put(challengeName,tiempo+"C");
+                  }
+                  Set<String>set=new HashSet<>();
+                  for (Map.Entry<String, String> entry : challengesAndTime.entrySet()) {
+                      Log.e(entry.getKey(), String.valueOf(entry.getValue()));
+                      set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
+                  }
+                  userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime")))/(((Long)document.get("challengesCompleted"))+1));//*Esto lo hara la actividad de escaner en caso de reto completado*/
+                  userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);//*Esto lo hara la actividad de escaner en caso de reto completado*/
+                  userSelected.update("challengesAndTime",challengesAndTime);
+                    /*La actividad de escaner deberá actualizar SharedPreferences con lo siguiente (ya que se utiliza en la barra de progreso  -> updateProgressBar(...) , en jugar para marcar con colores y en estadisticas individuales*/
+                    SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+emailUser, 0);
+                                                    SharedPreferences.Editor editor = myPrefs.edit();
+                                                    editor.putStringSet("ChallenegesCompleted#"+emailUser,set);
+                                                    editor.apply();
+                                                    editor.commit();
+                  Log.d("#################","RETO GUARDADO COMPLETADO");
+                  Toast.makeText(getContext(),challengeName+" COMPLETADO",Toast.LENGTH_LONG).show();
+                  /*AQUI LLAMAR A AR QUE DE DATOS DEL SITIO*/
+              }
+          }
+      });
+  }
+
+    public Runnable esperarYActualizar(final int milisegundos, final String email, final String challengeName) {
+      return new Runnable() {
+          @Override
+          public void run() {
+              Handler handler = new Handler();
+              handler.postDelayed(new Runnable() {
+                  public void run() {
+                      Log.e("ACCIONES","TRAS 3000ms");
+                      updateUserData(email,challengeName);
+                  }
+              }, milisegundos);
+          }
+      };
+    }
+
+    public Runnable esperarYActualizarPreferences(final int milisegundos, final String email, final String challengeName) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        Log.e("ACCIONES","TRAS 3000ms");
+                        updateSharedPreferences(email);
+                    }
+                }, milisegundos);
+            }
+        };
+    }
+
+
+
+    private void updateSharedPreferences(final String emailUser){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference dbUsers = db.collection("users");
+
+        final DocumentReference userSelected = db.collection("users").document(emailUser);
+
+        userSelected.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if(document.exists()){
+                    Map<String,String> challengesAndTime = (Map<String, String>) document.get("challengesAndTime");
+                    Set<String>set=new HashSet<>();
+                    for (Map.Entry<String, String> entry : challengesAndTime.entrySet()) {
+                        Log.e(entry.getKey(), String.valueOf(entry.getValue()));
+                        set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
+                    }
+                    SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+emailUser, 0);
+                    SharedPreferences.Editor editor = myPrefs.edit();
+                    editor.putStringSet("ChallenegesCompleted#"+emailUser,set);
+                    editor.apply();
+                    editor.commit();
+                    Toast.makeText(getContext(),"Tiempo detenido",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 
 
 }
