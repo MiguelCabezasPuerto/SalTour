@@ -1,19 +1,23 @@
 package com.miguelcabezas.tfm.saltour;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -91,10 +95,33 @@ public class TabNameFragment extends Fragment {
         }else{
             layout = inflater.inflate(R.layout.fragment_tab_general, container, false);
             final TextView t_jugador1,t_jugador2,t_jugador3,t_jugador,t_activos;
-            t_jugador1 = layout.findViewById(R.id.ranking_top1);
-            t_jugador2 = layout.findViewById(R.id.ranking_top2);
-            t_jugador3 = layout.findViewById(R.id.ranking_top3);
-            t_jugador = layout.findViewById(R.id.ranking_jugador);
+            final TextView desafios_jugador_1, desafios_jugador_2, desafios_jugador_3, desafios_jugador;
+            final TextView tiempo_jugador_1, tiempo_jugador_2, tiempo_jugador_3, tiempo_jugador;
+            final CardView c_jugador1,c_jugador2,c_jugador3,c_jugador;
+            final ImageView ver_jugador1, ver_jugador2, ver_jugador3;
+
+            ver_jugador1 = layout.findViewById(R.id.ver_1);
+            ver_jugador2 = layout.findViewById(R.id.ver_2);
+            ver_jugador3 = layout.findViewById(R.id.ver_3);
+
+            desafios_jugador_1 = layout.findViewById(R.id.num_desafios1);
+            desafios_jugador_2 = layout.findViewById(R.id.num_desafios2);
+            desafios_jugador_3 = layout.findViewById(R.id.num_desafios3);
+            desafios_jugador = layout.findViewById(R.id.num_desafios);
+
+            tiempo_jugador_1 = layout.findViewById(R.id.num_tiempo1);
+            tiempo_jugador_2 = layout.findViewById(R.id.num_tiempo2);
+            tiempo_jugador_3 = layout.findViewById(R.id.num_tiempo3);
+            tiempo_jugador = layout.findViewById(R.id.num_tiempo);
+
+            t_jugador1 = layout.findViewById(R.id.ranking_top1_text);
+            t_jugador2 = layout.findViewById(R.id.ranking_top2_text);
+            t_jugador3 = layout.findViewById(R.id.ranking_top3_text);
+            t_jugador = layout.findViewById(R.id.ranking_jugador_text);
+            c_jugador1 = layout.findViewById(R.id.ranking_top1);
+            c_jugador2 = layout.findViewById(R.id.ranking_top2);
+            c_jugador3 = layout.findViewById(R.id.ranking_top3);
+            c_jugador = layout.findViewById(R.id.ranking_jugador);
             t_activos = layout.findViewById(R.id.ranking_jugadores_activos);
             /*Poner bonito y sacar datos de top3 jugadores, posicion del jugador y numero de jugadores activos de BBDD*/
             final ArrayList<User>users = new ArrayList<>();
@@ -155,46 +182,104 @@ public class TabNameFragment extends Fragment {
                                 ownPosition = ownPosition +1;
                                 if (users != null && !users.isEmpty()){
                                     if(users.size()==1){
-                                        t_jugador1.setText("1)"+users.get(0).getEmail() + "|"+ users.get(0).getChallengesCompleted() + "|" + users.get(0).getTotalTime());
-                                        t_jugador.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                        t_jugador1.setText("1)"+users.get(0).getEmail());
+
+                                        t_jugador.setText(ownPosition+")" +ownUser.getEmail());
+                                        desafios_jugador.setText(ownUser.getChallengesCompleted()+" " );
+                                        tiempo_jugador.setText(String.valueOf(ownUser.getTotalTime()));
+
+                                        desafios_jugador_1.setText(users.get(0).getChallengesCompleted()+" " );
+                                        tiempo_jugador_1.setText(String.valueOf(users.get(0).getTotalTime()));
+
                                         t_jugador.setTypeface(null, Typeface.BOLD);
                                         t_activos.setText("Jugadores activos: "+activeUsers);
+                                        c_jugador2.setVisibility(View.INVISIBLE);
+                                        c_jugador3.setVisibility(View.INVISIBLE);
                                     }else if(users.size()==2){
-                                        t_jugador1.setText("1)"+users.get(0).getEmail() + "|"+ users.get(0).getChallengesCompleted() + "|" + users.get(0).getTotalTime());
-                                        t_jugador2.setText("2)"+users.get(1).getEmail() + "|"+ users.get(1).getChallengesCompleted() + "|" + users.get(1).getTotalTime());
-                                        t_jugador.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                        t_jugador1.setText("1)"+users.get(0).getEmail());
+                                        desafios_jugador_1.setText( users.get(0).getChallengesCompleted()+" "  );
+                                        tiempo_jugador_1.setText(String.valueOf(users.get(0).getTotalTime()));
+                                        t_jugador2.setText("2)"+users.get(1).getEmail());
+                                        desafios_jugador_2.setText( users.get(1).getChallengesCompleted()+" "  );
+                                        tiempo_jugador_2.setText(String.valueOf(users.get(1).getTotalTime()));
+                                        t_jugador.setText(ownPosition+")" +ownUser.getEmail());
+                                        desafios_jugador.setText(ownUser.getChallengesCompleted()+" " );
+                                        tiempo_jugador.setText(String.valueOf(ownUser.getTotalTime()));
                                         t_jugador.setTypeface(null, Typeface.BOLD);
                                         t_activos.setText("Jugadores activos: "+activeUsers);
+                                        c_jugador3.setVisibility(View.INVISIBLE);
                                     }else{
-                                        t_jugador1.setText("1)"+users.get(0).getEmail() + "|"+ users.get(0).getChallengesCompleted() + "|" + users.get(0).getTotalTime());
-                                        t_jugador2.setText("2)"+users.get(1).getEmail() + "|"+ users.get(1).getChallengesCompleted() + "|" + users.get(1).getTotalTime());
-                                        t_jugador3.setText("3)"+users.get(2).getEmail() + "|"+ users.get(2).getChallengesCompleted() + "|" + users.get(2).getTotalTime());
-                                        t_jugador.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                        t_jugador1.setText("1)"+users.get(0).getEmail());
+                                        desafios_jugador_1.setText(users.get(0).getChallengesCompleted()+" " );
+                                        tiempo_jugador_1.setText(String.valueOf(users.get(0).getTotalTime()));
+                                        t_jugador2.setText("2)"+users.get(1).getEmail());
+                                        desafios_jugador_2.setText( users.get(1).getChallengesCompleted()+" "  );
+                                        tiempo_jugador_2.setText(String.valueOf(users.get(1).getTotalTime()));
+                                        t_jugador3.setText("3)"+users.get(2).getEmail());
+                                        desafios_jugador_3.setText( users.get(2).getChallengesCompleted()+" "  );
+                                        tiempo_jugador_3.setText(String.valueOf(users.get(2).getTotalTime()));
+                                        t_jugador.setText(ownPosition+")" +ownUser.getEmail());
+                                        desafios_jugador.setText(ownUser.getChallengesCompleted()+" " );
+                                        tiempo_jugador.setText(String.valueOf(ownUser.getTotalTime()));
                                         t_jugador.setTypeface(null, Typeface.BOLD);
                                         t_activos.setText("Jugadores activos: "+activeUsers);
+                                        c_jugador.setCardBackgroundColor(Color.LTGRAY);
                                     }
                                     switch (ownPosition){
                                         case 1:
                                             t_jugador.setText("");
-                                            t_jugador1.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                            c_jugador.setVisibility(View.INVISIBLE);
+                                            t_jugador1.setText(ownPosition+")" +ownUser.getEmail());
+                                            desafios_jugador_1.setText(ownUser.getChallengesCompleted()+" " );
+                                            tiempo_jugador_1.setText(String.valueOf(ownUser.getTotalTime()));
                                             t_jugador1.setTypeface(null, Typeface.BOLD);
                                             t_activos.setText("Jugadores activos: "+activeUsers);
+                                            c_jugador1.setCardBackgroundColor(Color.LTGRAY);
                                             break;
                                         case 2:
                                             t_jugador.setText("");
-                                            t_jugador2.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                            c_jugador.setVisibility(View.INVISIBLE);
+                                            t_jugador2.setText(ownPosition+")" +ownUser.getEmail());
+                                            desafios_jugador_2.setText(ownUser.getChallengesCompleted()+" " );
+                                            tiempo_jugador_2.setText(String.valueOf(ownUser.getTotalTime()));
                                             t_jugador2.setTypeface(null, Typeface.BOLD);
                                             t_activos.setText("Jugadores activos: "+activeUsers);
+                                            c_jugador2.setCardBackgroundColor(Color.LTGRAY);
                                             break;
                                         case 3:
                                             t_jugador.setText("");
-                                            t_jugador3.setText(ownPosition+")" +ownUser.getEmail() + "|" + ownUser.getChallengesCompleted() + "|" + ownUser.getTotalTime());
+                                            c_jugador.setVisibility(View.INVISIBLE);
+                                            t_jugador3.setText(ownPosition+")" +ownUser.getEmail());
+                                            desafios_jugador_3.setText(ownUser.getChallengesCompleted()+" " );
+                                            tiempo_jugador_3.setText(String.valueOf(ownUser.getTotalTime()));
                                             t_jugador3.setTypeface(null, Typeface.BOLD);
                                             t_activos.setText("Jugadores activos: "+activeUsers);
+                                            c_jugador3.setCardBackgroundColor(Color.LTGRAY);
                                             break;
                                         default:
                                             break;
                                     }
+
+                                    /*Llamar a un fragment pasando el email, retos, posicion y retos completados y los despliegue*/
+                                    ver_jugador1.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Log.e("VER JUGADOR 1", users.get(0).getEmail());
+                                            
+                                        }
+                                    });
+                                    ver_jugador2.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Log.e("VER JUGADOR 2", users.get(1).getEmail());
+                                        }
+                                    });
+                                    ver_jugador3.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Log.e("VER JUGADOR 3", users.get(2).getEmail());
+                                        }
+                                    });
 
 
                                 }

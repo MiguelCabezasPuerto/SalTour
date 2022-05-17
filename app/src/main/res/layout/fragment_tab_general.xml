@@ -10,22 +10,352 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/ranking_top1"
+
+  <androidx.cardview.widget.CardView
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
+      cardUseCompatPadding="true"
+      cardElevation="4dp"
+      cardCornerRadius="3dp"
+      android:layout_margin="6dp"
+      android:id="@+id/ranking_top1"
+      >
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="horizontal">
+
+          <TextView
+              android:id="@+id/ranking_top1_text"
+              android:layout_width="250dp"
+              android:layout_height="wrap_content"></TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              >
+
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+                  <ImageView
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
+                      android:contentDescription="TODO"
+                      android:cropToPadding="true"
+                      android:src="@drawable/challenge"
+                      ></ImageView>
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="num desafios"
+                      android:id="@+id/num_desafios1"
+                      android:layout_marginLeft="20dp"></TextView>
+
+              </LinearLayout>
+
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginTop="20dp">
+
+                  <ImageView
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
+                      android:cropToPadding="true"
+                      android:src="@drawable/time"></ImageView>
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="tiempo"
+                      android:id="@+id/num_tiempo1"
+                      android:layout_marginLeft="20dp"></TextView>
+
+              </LinearLayout>
+
+          </LinearLayout>
+
+          <ImageView
+              android:layout_width="match_parent"
+              android:id="@+id/ver_1"
+              android:layout_height="match_parent"
+              android:contentDescription="TODO"
+              android:cropToPadding="true"
+              android:src="@drawable/eye"
+              android:layout_marginLeft="30dp">
+
+
+          </ImageView>
+
+      </LinearLayout>
+  </androidx.cardview.widget.CardView>
+
+
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></TextView>
-        <TextView
+            android:layout_height="100dp"
+            cardUseCompatPadding="true"
+            cardElevation="4dp"
+            cardCornerRadius="3dp"
+            android:layout_margin="6dp"
             android:id="@+id/ranking_top2"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ranking_top2_text"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"></TextView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="TODO"
+                            android:cropToPadding="true"
+                            android:src="@drawable/challenge"
+                            ></ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="num desafios"
+                            android:id="@+id/num_desafios2"
+                            android:layout_marginLeft="20dp"></TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:cropToPadding="true"
+                            android:src="@drawable/time"></ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="tiempo"
+                            android:id="@+id/num_tiempo2"
+                            android:layout_marginLeft="20dp"></TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="TODO"
+                    android:id="@+id/ver_2"
+                    android:cropToPadding="true"
+                    android:src="@drawable/eye"
+                    android:layout_marginLeft="30dp">
+
+
+                </ImageView>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></TextView>
-        <TextView
+            android:layout_height="100dp"
+            cardUseCompatPadding="true"
+            cardElevation="4dp"
+            cardCornerRadius="3dp"
+            android:layout_margin="6dp"
             android:id="@+id/ranking_top3"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ranking_top3_text"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"></TextView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="TODO"
+                            android:cropToPadding="true"
+                            android:src="@drawable/challenge"
+                            ></ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="num desafios"
+                            android:id="@+id/num_desafios3"
+                            android:layout_marginLeft="20dp"></TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:cropToPadding="true"
+                            android:src="@drawable/time"></ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="tiempo"
+                            android:id="@+id/num_tiempo3"
+                            android:layout_marginLeft="20dp"></TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="TODO"
+                    android:id="@+id/ver_3"
+                    android:cropToPadding="true"
+                    android:src="@drawable/eye"
+                    android:layout_marginLeft="30dp">
+
+
+                </ImageView>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></TextView>
-        <TextView
-            android:id="@+id/ranking_jugador"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></TextView>
+            android:layout_height="100dp"
+            cardUseCompatPadding="true"
+            cardElevation="4dp"
+            cardCornerRadius="3dp"
+            android:layout_margin="6dp"
+            android:id="@+id/ranking_jugador">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ranking_jugador_text"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"></TextView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="TODO"
+                            android:cropToPadding="true"
+                            android:src="@drawable/challenge"
+                            ></ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="num desafios"
+                            android:id="@+id/num_desafios"
+                            android:layout_marginLeft="20dp"></TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:cropToPadding="true"
+                            android:src="@drawable/time"></ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="tiempo"
+                            android:id="@+id/num_tiempo"
+                            android:layout_marginLeft="20dp"></TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="TODO"
+                    android:cropToPadding="true"
+                    android:src="@drawable/eye"
+                    android:layout_marginLeft="30dp">
+
+
+                </ImageView>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+
         <TextView
             android:id="@+id/ranking_jugadores_activos"
             android:layout_width="match_parent"

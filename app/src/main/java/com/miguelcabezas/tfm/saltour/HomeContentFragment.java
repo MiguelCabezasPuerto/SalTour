@@ -810,6 +810,10 @@ public class HomeContentFragment extends Fragment {
                   Log.d("#################","RETO GUARDADO COMPLETADO");
                   Toast.makeText(getContext(),challengeName+" COMPLETADO",Toast.LENGTH_LONG).show();
                   /*AQUI LLAMAR A AR QUE DE DATOS DEL SITIO*/
+                  Log.d("#################","TO AR");
+                  Intent LaunchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.DefaultCompany.CharacterTalking");
+                  startActivityForResult(LaunchIntent,2);
+
               }
           }
       });
