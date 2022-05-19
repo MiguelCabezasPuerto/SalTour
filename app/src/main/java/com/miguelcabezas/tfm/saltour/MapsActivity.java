@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -124,5 +125,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*super.onBackPressed();*/
+        setResult(Activity.RESULT_FIRST_USER);
+        finish();
     }
 }

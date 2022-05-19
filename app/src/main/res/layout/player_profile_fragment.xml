@@ -50,17 +50,6 @@
             android:paddingBottom="24dp">
 
 
-            <ImageView
-                android:id="@+id/edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                android:clickable="true"
-                android:src="@android:drawable/ic_menu_edit" />
-
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
@@ -91,27 +80,29 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:text="(Retos completados)"
+
                 android:textColor="#fff"
                 android:textSize="18sp" />
         </RelativeLayout>
 
-        <ExpandableListView
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/profile_layout"
-            android:layout_margin="5dp"
-            android:layout_marginTop="5dp"
-            android:background="#fff"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:id="@+id/expandableListView"
-            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.5dp" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_layout"
+            >
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/custom_listview"
+                android:dividerHeight="2dp"
+                android:divider="@color/black">
+
+            </ListView>
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 </ScrollView>

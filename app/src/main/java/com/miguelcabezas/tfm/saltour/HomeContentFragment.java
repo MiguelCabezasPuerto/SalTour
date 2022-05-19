@@ -97,6 +97,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class HomeContentFragment extends Fragment {
 
@@ -121,6 +123,19 @@ public class HomeContentFragment extends Fragment {
 
     return frag;
   }
+
+    private void requestCamera() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 50);
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 50);
+            }
+        }
+    }
+
 
   @Override
   public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable
@@ -224,12 +239,13 @@ public class HomeContentFragment extends Fragment {
     }else if(getArguments().getString(TEXT).equalsIgnoreCase("QR")){
         layout = inflater.inflate(R.layout.qr_fragment, container, false);
         SurfaceView cameraView = (SurfaceView) layout.findViewById(R.id.camera_view);
+        Log.e("QR","Calling initQR");
         initQR(cameraView);
+
     }else if(getArguments().getString(TEXT).equalsIgnoreCase("Map")){
         Intent intent;
         intent=new Intent(getContext(),MapsActivity.class);
-        startActivity(intent);
-        getActivity().finish();
+        startActivityForResult(intent,1);
     } else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_perfil))){
        layout = inflater.inflate(R.layout.perfil_fragment, container, false);
         mAuth = FirebaseAuth.getInstance();
@@ -609,12 +625,13 @@ public class HomeContentFragment extends Fragment {
                         .build();
 
         // creo la camara
+
         final CameraSource cameraSource = new CameraSource
                 .Builder(getContext(), barcodeDetector)
                 .setRequestedPreviewSize(1600, 1024)
                 .setAutoFocusEnabled(true) //you should add this feature
                 .build();
-
+        Log.e("QR","Camera created");
         // listener de ciclo de vida de la camara
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -667,28 +684,93 @@ public class HomeContentFragment extends Fragment {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
                 String emailUser= currentUser.getEmail();
 
+
+
+
+
+
                 if (barcodes.size() > 0) {
 
                     // obtenemos el token
                     token = barcodes.valueAt(0).displayValue.toString();
-
+                    Log.e("QR","token detected "+token);
                     // verificamos que el token anterior no se igual al actual
                     // esto es util para evitar multiples llamadas empleando el mismo token
                     if (!token.equals(tokenanterior)) {
 
                         // guardamos el ultimo token proceado
                         tokenanterior = token;
-                        Log.i("token", token);
+                        Log.e("TOKEN#####", token);
 
                         if (URLUtil.isValidUrl(token)) {
+                            ActiveChallengeSingleton activeChallengeSingleton = ActiveChallengeSingleton.getInstance();
                             // si es una URL valida abre el navegador
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(token));
-                            startActivity(browserIntent);
-                        } else {
+                            /*Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(token));
+                            startActivity(browserIntent);*/
+                            if(token.equalsIgnoreCase("http://en.m.wikipedia.org")){ //callejeros penguins
+                                Log.d("RETO","pingüinos");
+                                if(activeChallengeSingleton.getName().contains("callejeros")){
+                                    Log.d("Reto","parado");
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                    }
+                                }else{
+                                    Log.e("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
+                            }else if(token.equalsIgnoreCase("https://tendido1.com/wp-content/uploads/2020/12/qrmenu.jpeg")){ //rana
+                                Log.d("RETO","rana");
+                                if(activeChallengeSingleton.getName().contains("rana")){
+                                    Log.d("Reto","parado");
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                    }
+                                }else{
+                                    Log.e("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
+                            }else if(token.equalsIgnoreCase("https://forms.gle/6151QniEnpo6SNAm7")){ //plaza
+                                Log.d("RETO","plaza");
+                                if(activeChallengeSingleton.getName().contains("plaza")){
+                                    Log.d("Reto","parado");
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                    }
+                                }else{
+                                    Log.e("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
+                            }else if(token.equalsIgnoreCase("")){ //jardin
+                                Log.d("RETO","jardin");
+                                if(activeChallengeSingleton.getName().contains("jardín")){
+                                    Log.d("Reto","parado");
+                                    if(isAServiceRunning(CountTimeService.class)){
+                                        getActivity().stopService(new Intent(getContext(), CountTimeService.class));
+                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                    }
+                                }else{
+                                    Log.e("Reto","No es el reto iniciado");
+                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                }
+                            }
+                        }
+
+
+
+
+
+                        else {
                             ActiveChallengeSingleton activeChallengeSingleton = ActiveChallengeSingleton.getInstance();
                             // QR generados para los retos, aqui llamar a la AR adecuada en funcion del reto que sea y parar el tiempo para ese reto
                             if(token.equalsIgnoreCase(String.valueOf(EnumRetos.rana))){
-                                Log.d("RETO","rana");
+                                Log.e("RETO","rana");
                                 if(activeChallengeSingleton.getName().contains(token)){
                                     if(isAServiceRunning(CountTimeService.class)){
                                         getActivity().stopService(new Intent(getContext(), CountTimeService.class));
@@ -712,7 +794,7 @@ public class HomeContentFragment extends Fragment {
                                     Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
                                 }
                             }else if(token.equalsIgnoreCase(String.valueOf(EnumRetos.jardín))){
-                                Log.d("RETO","jardin");
+                                Log.e("RETO","jardin");
                                 if(activeChallengeSingleton.getName().contains(token)){
                                     Log.d("Reto","parado");
                                     if(isAServiceRunning(CountTimeService.class)){
@@ -878,6 +960,7 @@ public class HomeContentFragment extends Fragment {
             }
         });
     }
+
 
 
 }

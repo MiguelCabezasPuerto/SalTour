@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.miguelcabezas.tfm.saltour.R;
+import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
+import com.miguelcabezas.tfm.saltour.utils.SalLib;
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
@@ -50,7 +53,19 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.expandedListItem);
         TextView expandedListTextViewTime = (TextView) convertView.findViewById(R.id.expandedListItemTime);
         expandedListTextView.setText(challenge_time[0]);
-        expandedListTextViewTime.setText(challenge_time[1]);
+        expandedListTextViewTime.setText(SalLib.convertToHHMMSS(Long.parseLong(SalLib.removeLastCharacter(challenge_time[1]))));
+        ImageView challengeImageView = convertView.findViewById(R.id.challenge_player_imageview);
+
+        if(challenge_time[0].contains(String.valueOf(EnumRetos.rana))){
+            challengeImageView.setImageResource(R.drawable.img_rana);
+        }else if(challenge_time[0].contains(String.valueOf(EnumRetos.plaza))){
+            challengeImageView.setImageResource(R.drawable.img_medallon);
+        }else if(challenge_time[0].contains(String.valueOf(EnumRetos.jardín))){
+            challengeImageView.setImageResource(R.drawable.img_jardin);
+        }else if(challenge_time[0].contains(String.valueOf(EnumRetos.callejeros))){
+            challengeImageView.setImageResource(R.drawable.img_penguins);
+        }
+
         return convertView;
     }
 
