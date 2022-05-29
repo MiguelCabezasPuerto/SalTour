@@ -69,7 +69,10 @@ public class HomeActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home);
     mAuth = FirebaseAuth.getInstance();
-    Toast.makeText(getApplicationContext(),"Bienvenido/a"+mAuth.getCurrentUser().getDisplayName(),Toast.LENGTH_LONG).show();
+    if(mAuth.getCurrentUser().getDisplayName()!=null){
+      Toast.makeText(getApplicationContext(),"Bienvenido/a"+mAuth.getCurrentUser().getDisplayName(),Toast.LENGTH_LONG).show();
+    }
+
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
@@ -97,7 +100,11 @@ public class HomeActivity extends AppCompatActivity
     FirebaseUser currentUser = mAuth.getCurrentUser();
     currentUser.reload();
     nombreUsuario=header.findViewById(R.id.user);
-    nombreUsuario.setText(currentUser.getDisplayName().toString());
+    if(currentUser.getDisplayName()==null){
+      nombreUsuario.setText("Invitado");
+    }else{
+      nombreUsuario.setText(currentUser.getDisplayName().toString());
+    }
 
     header.findViewById(R.id.header_title).setOnClickListener(new View.OnClickListener() {
       @Override
@@ -149,16 +156,22 @@ public class HomeActivity extends AppCompatActivity
         throw new IllegalArgumentException("menu option not implemented!!");
     }
 
-    Fragment fragment = HomeContentFragment.newInstance(getString(title),mAuth.getCurrentUser().getDisplayName());
-    getSupportFragmentManager()
-            .beginTransaction()
-            .setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
-            .replace(R.id.home_content, fragment)
-            .commit();
+    if(mAuth.getCurrentUser().getEmail().equalsIgnoreCase("Invitado@testsaltour.com") && (title == R.id.nav_perfil || title == R.id.nav_ranking)){
+      Toast.makeText(getApplicationContext(),"Regístrese para disfrutar de estas funcionalidades",Toast.LENGTH_LONG).show();
+    }else{
+      Fragment fragment = HomeContentFragment.newInstance(getString(title),mAuth.getCurrentUser().getDisplayName());
+      getSupportFragmentManager()
+              .beginTransaction()
+              .setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+              .replace(R.id.home_content, fragment)
+              .commit();
 
-    setTitle(getString(title));
+      setTitle(getString(title));
 
-    drawerLayout.closeDrawer(GravityCompat.START);
+      drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+
 
     return true;
   }
@@ -177,7 +190,12 @@ public class HomeActivity extends AppCompatActivity
     mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     TextView user = view.findViewById(R.id.user);
-    user.setText(currentUser.getDisplayName().toString());
+    if(!(mAuth.getCurrentUser().getEmail().equalsIgnoreCase("invitado@testsaltour.com"))){
+      user.setText(currentUser.getDisplayName().toString());
+    }else{
+      user.setText("Invitado");
+    }
+
   }
 
   @Override

@@ -33,10 +33,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -44,6 +53,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,6 +67,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.rpc.context.AttributeContext;
 import com.miguelcabezas.tfm.saltour.model.User;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPumpRanking;
 import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapter;
@@ -70,16 +81,21 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import android.os.Bundle;
 
-public class LoginActivity extends AppCompatActivity {
+
+public class LoginActivity extends AppCompatActivity{
 
     private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
     private DatabaseReference mDatabase;
     private EditText usuario,contrasena;
     private Button registro;
+    private SignInButton btnLoginGoogle;
     private ProgressDialog progressDialog;
     private TextView olvido;
     private static final int CODIGO_PERMISOS_CAMARA = 1,
             CODIGO_PERMISOS_ALMACENAMIENTO = 2;
+    private int RC_SIGN_IN = 5;
+    private final int REGISTER_REQUEST_CODE = 6;
     // Banderas que indicarán si tenemos permisos
     private boolean tienePermisoCamara = false,
             tienePermisoAlmacenamiento = false;
@@ -91,13 +107,32 @@ public class LoginActivity extends AppCompatActivity {
         usuario=findViewById(R.id.editTextTextEmailAddress);
         contrasena=findViewById(R.id.editTextTextPassword);
         registro=findViewById(R.id.b_registro);
+        btnLoginGoogle = (SignInButton)findViewById(R.id.b_entrar_google);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         progressDialog=new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         verificarYPedirPermisosDeAlmacenamiento();
         verificarYPedirPermisosDeCamara();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
+
+        btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("TAG","Login google button pressed");
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent,RC_SIGN_IN);
+            }
+        });
+
+
     }
+
+
+
+
     public void updateUI(FirebaseUser account){
 
         if(account != null){
@@ -117,10 +152,168 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.e("TAG","On activity result");
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==RESULT_OK){
             Toast.makeText(getApplicationContext(),"Instrucciones para restauración de contraseña enviadas",Toast.LENGTH_LONG).show();
         }
+        if(requestCode == RC_SIGN_IN){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            if(task.isSuccessful()){
+                try {
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                    firebaseAuthWithGoogle(account.getIdToken());
+                }catch (ApiException e){
+                    Toast.makeText(getApplicationContext(),"Google sign in fail",Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(getApplicationContext(),"Ocurrió un error. "+task.getException().toString(),Toast.LENGTH_LONG).show();
+            }
+        }
+        if(requestCode == REGISTER_REQUEST_CODE && resultCode == RESULT_OK){
+            Log.d("TAG","Registro realizado");
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken){
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            final FirebaseUser currentUser = mAuth.getCurrentUser();
+                            currentUser.reload();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                final CollectionReference usersRef = db.collection("users");
+                                usersRef.whereEqualTo("email", currentUser.getEmail())
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.e("TAG","EXISTE EN BBDD");
+                                                    ArrayList<String> items = new ArrayList();
+                                                    Map<String, String> challengesAnTime = new HashMap<>();
+                                                    Set<String>set = new HashSet<>();
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        Log.e("Map",document.getData().get("challengesAndTime").toString());
+                                                        ObjectMapper oMapper = new ObjectMapper();
+                                                        challengesAnTime = oMapper.convertValue(document.getData().get("challengesAndTime"), Map.class);
+                                                        for (Map.Entry<String, String> entry : challengesAnTime.entrySet()) {
+                                                            Log.e(entry.getKey(), String.valueOf(entry.getValue()));
+                                                            set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
+                                                        }
+                                                    }
+
+                                                    if(set.isEmpty()){
+                                                        int posArroba=mAuth.getCurrentUser().getEmail().toString().indexOf("@");
+                                                        String nombreUsuario=mAuth.getCurrentUser().getEmail().toString().substring(0,posArroba);
+                                                        Log.d("EMAIL",nombreUsuario);
+                                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                                .setDisplayName(nombreUsuario)
+                                                                .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
+                                                                .build();
+                                                        final FirebaseUser currentUser = mAuth.getCurrentUser();
+                                                        currentUser.reload();
+                                                        currentUser.updateProfile(profileUpdates)
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                                            StorageReference storageRef = storage.getReference();
+                                                                            StorageReference userImageRef = storageRef.child("images/"+ currentUser.getEmail().toString()+".jpg");
+                                                                            Uri file =  Uri.parse("android.resource://com.miguelcabezas.tfm.saltour/" + R.drawable.profile_icon);
+                                                                            UploadTask uploadTask = userImageRef.putFile(file);
+                                                                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                                                @Override
+                                                                                public void onFailure(@NonNull Exception exception) {
+                                                                                    Toast.makeText(getApplicationContext(),"FAIL IMAGE",Toast.LENGTH_LONG).show();
+                                                                                }
+                                                                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                                @Override
+                                                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                                                                    // ...
+
+                                                                                }
+                                                                            });
+                                                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                                            Map<String, Object> newUser = new HashMap<>();
+                                                                            newUser.put("email", currentUser.getEmail());
+                                                                            newUser.put("challengesCompleted", 0);
+                                                                            newUser.put("totalTime", 0);
+                                                                            newUser.put("challengesAndTime",new HashMap<String,String>());
+                                                                            db.collection("users").document(currentUser.getEmail()).set(newUser);
+                                                                            /*db.collection("users").add(newUser);*/
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+
+                                                    SharedPreferences myPrefs = getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
+                                                    SharedPreferences.Editor editor = myPrefs.edit();
+                                                    editor.putStringSet("ChallenegesCompleted#"+currentUser.getEmail(),set);
+                                                    editor.apply();
+                                                    editor.commit();
+
+                                                    usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if(task.isSuccessful()){
+                                                                SharedPreferences myPrefs = getSharedPreferences("ActiveUsers",0);
+                                                                SharedPreferences.Editor editor = myPrefs.edit();
+                                                                editor.putLong("ActiveUsers",task.getResult().size());
+                                                                editor.apply();
+                                                                editor.commit();
+                                                            }
+                                                        }
+                                                    });
+                                                    Intent intent;
+                                                    intent=new Intent(getApplicationContext(),HomeActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                } else {
+                                                    Log.e("ERROR", "Error getting documents: ", task.getException());
+                                                    Log.e("TAG","No exite en BBDD");
+                                                    Intent intent;
+                                                    intent=new Intent(getApplicationContext(),HomeActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            }
+                                        });
+
+                        }else{
+                            Log.e("Error","SignInWithCredential:failure",task.getException());
+                        }
+                    }
+                });
+    }
+
+
+
+    public void onClickLoginInvitado(View view){
+        mAuth.signInWithEmailAndPassword("Invitado@testsaltour.com","12345678")
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            final FirebaseUser currentUser = mAuth.getCurrentUser();
+                            currentUser.reload();
+                            usuario.setText("");
+                            contrasena.setText("");
+                            usuario.setBackgroundResource(0);
+                            contrasena.setBackgroundResource(0);
+                            Intent intent;
+                            intent=new Intent(getApplicationContext(),HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     public void onClickLogin(View view){
@@ -256,7 +449,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
     public void onClickRegistro(View view){
-        String usuario_text=usuario.getText().toString().trim();
+        Intent intent=new Intent(getApplicationContext(),RegisterActivity.class);
+        startActivityForResult(intent,REGISTER_REQUEST_CODE);
+        /*String usuario_text=usuario.getText().toString().trim();
         String contrasena_text=contrasena.getText().toString().trim();
         if(usuario_text.isEmpty()){
             Toast.makeText(this,"Se debe introducir un email",Toast.LENGTH_LONG).show();
@@ -330,7 +525,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                     newUser.put("totalTime", 0);
                                                                     newUser.put("challengesAndTime",new HashMap<String,String>());
                                                                     db.collection("users").document(currentUser.getEmail()).set(newUser);
-                                                                    /*db.collection("users").add(newUser);*/
+                                                                    *//*db.collection("users").add(newUser);*//*
                                                                     Toast.makeText(LoginActivity.this,"Enviado correo de verificación",Toast.LENGTH_LONG).show();
                                                                 }
                                                             }
@@ -357,7 +552,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         progressDialog.dismiss();
                     }
-                });
+                });*/
     }
     private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;

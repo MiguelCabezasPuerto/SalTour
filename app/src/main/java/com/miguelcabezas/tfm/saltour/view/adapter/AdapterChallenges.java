@@ -102,32 +102,35 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
         btnPlay.setId(position);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        SharedPreferences myPrefs = context.getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
-        Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
-        Set<String> keysChallenges = mDataSet.get(position).keySet();
-        for(String challenge : challengesAndTime){
-            String par[]=challenge.split("#");
-            String time = par[1];
-            String normalized = Normalizer.normalize(par[0], Normalizer.Form.NFD);
-            String ascii = normalized.replaceAll("[^\\p{ASCII}]", "");
-            String asciiLower = ascii.toLowerCase();
-            String normalized2 = Normalizer.normalize(mDataSet.get(position).keySet().toArray()[0].toString(), Normalizer.Form.NFD);
-            String ascii2 = normalized2.replaceAll("[^\\p{ASCII}]", "");
-            String asciiLower2 = ascii2.toLowerCase();
-            if(asciiLower2.contains(asciiLower)){
-                if(par[1].contains("C")){
-                    holder.cardView.setCardBackgroundColor(Color.GREEN);
-                    btnPlay.setImageResource(R.drawable.check_icon);
-                    btnPlay.setEnabled(false);
-                    btnPlay.setBackgroundColor(Color.GREEN);
-                    btnPlay.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                }else{
-                    holder.cardView.setCardBackgroundColor(Color.YELLOW);
-                    btnPlay.setBackgroundColor(Color.YELLOW);
-                    btnPlay.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+        if(!(currentUser.getEmail().equalsIgnoreCase("Invitado@testsaltour.com"))){
+            SharedPreferences myPrefs = context.getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
+            Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
+            Set<String> keysChallenges = mDataSet.get(position).keySet();
+            for(String challenge : challengesAndTime){
+                String par[]=challenge.split("#");
+                String time = par[1];
+                String normalized = Normalizer.normalize(par[0], Normalizer.Form.NFD);
+                String ascii = normalized.replaceAll("[^\\p{ASCII}]", "");
+                String asciiLower = ascii.toLowerCase();
+                String normalized2 = Normalizer.normalize(mDataSet.get(position).keySet().toArray()[0].toString(), Normalizer.Form.NFD);
+                String ascii2 = normalized2.replaceAll("[^\\p{ASCII}]", "");
+                String asciiLower2 = ascii2.toLowerCase();
+                if(asciiLower2.contains(asciiLower)){
+                    if(par[1].contains("C")){
+                        holder.cardView.setCardBackgroundColor(Color.GREEN);
+                        btnPlay.setImageResource(R.drawable.check_icon);
+                        btnPlay.setEnabled(false);
+                        btnPlay.setBackgroundColor(Color.GREEN);
+                        btnPlay.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                    }else{
+                        holder.cardView.setCardBackgroundColor(Color.YELLOW);
+                        btnPlay.setBackgroundColor(Color.YELLOW);
+                        btnPlay.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+                    }
                 }
             }
         }
+
 
 
 

@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".RegisterActivity"
     android:orientation="vertical">
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -36,34 +35,6 @@
         android:layout_marginTop="60dp"
         android:hint="Contraseña"/>
 
-    <Button
-        android:id="@+id/b_entrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:onClick="onClickLogin"
-        android:text="Entrar"></Button>
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/b_entrar_google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Text"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        />
-
-    <Button
-        android:id="@+id/b_entrar_invitado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:onClick="onClickLoginInvitado"
-        android:text="Entrar como invitado"></Button>
-
 
     <Button
         android:id="@+id/b_registro"
@@ -74,15 +45,4 @@
         android:onClick="onClickRegistro"
         android:text="Registrarse"></Button>
 
-    <TextView
-        android:id="@+id/olvioContrasena"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
-        android:clickable="true"
-        android:onClick="onClickForgotPassword"
-        android:text="Olvidé mi contraseña"
-        android:textColor="@android:color/holo_blue_light"
-        android:textStyle="bold"></TextView>
 </LinearLayout>

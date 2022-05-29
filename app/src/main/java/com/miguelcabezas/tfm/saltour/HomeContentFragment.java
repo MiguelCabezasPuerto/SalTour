@@ -46,6 +46,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -110,6 +113,9 @@ public class HomeContentFragment extends Fragment {
     private TabLayout tabLayout;
     private GoogleMap mapa;
 
+   private GoogleSignInClient mGoogleSignInClient;
+   private GoogleSignInOptions googleSignInOptions;
+
   public static HomeContentFragment newInstance(String text,String user) {
     HomeContentFragment frag = new HomeContentFragment();
 
@@ -152,7 +158,8 @@ public class HomeContentFragment extends Fragment {
       final HashMap<String, List<String>> expandableListDetail;
         View layout = null;
 
-
+      GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+      mGoogleSignInClient = GoogleSignIn.getClient(getContext(),gso);
 
     if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_jugar))){
        layout = inflater.inflate(R.layout.jugar_fragment, container, false);
@@ -227,7 +234,10 @@ public class HomeContentFragment extends Fragment {
                    v.setVisibility(View.INVISIBLE);
                    v.setEnabled(false);
                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                   getActivity().runOnUiThread(esperarYActualizarPreferences(3000,auth.getCurrentUser().getEmail(),activeChallengeSingleton.getName()));
+                   if(!(auth.getCurrentUser().getEmail().equalsIgnoreCase("Invitado@testsaltour.com"))){
+                       getActivity().runOnUiThread(esperarYActualizarPreferences(3000,auth.getCurrentUser().getEmail(),activeChallengeSingleton.getName()));
+                   }
+
                }
               /* long startTime = SystemClock.elapsedRealtime();
                long endTime = SystemClock.elapsedRealtime();
@@ -247,45 +257,56 @@ public class HomeContentFragment extends Fragment {
         intent=new Intent(getContext(),MapsActivity.class);
         startActivityForResult(intent,1);
     } else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_perfil))){
-       layout = inflater.inflate(R.layout.perfil_fragment, container, false);
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        currentUser.reload();
-        usuario=layout.findViewById(R.id.usuario);
-        contrasena=layout.findViewById(R.id.contrasena2);
-        oldContrasena=layout.findViewById(R.id.contrasena);
-        usuario.setHint((currentUser.getDisplayName().toString()));
-        fotoperfil=layout.findViewById(R.id.fotoperfil);
-        editProfile=layout.findViewById(R.id.edit_profile);
-        displayName=layout.findViewById(R.id.displayName);
-        editProfilePanel=layout.findViewById(R.id.edit_profile_panel);
-        displayName.setText(currentUser.getDisplayName().toString());
-        /*FirebaseFirestore db = FirebaseFirestore.getInstance();*/
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        final StorageReference pathReference = storageRef.child("images/"+ currentUser.getEmail().toString()+".jpg");
-        Log.d("URL",pathReference.getDownloadUrl().toString());
+        if((mAuth.getCurrentUser().getEmail().equalsIgnoreCase("invitado@testsaltour.com"))){
+            Toast.makeText(getContext(),"Regístrese para disfrutar de estas funcionalidades",Toast.LENGTH_LONG).show();
+        }else{
+            layout = inflater.inflate(R.layout.perfil_fragment, container, false);
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            currentUser.reload();
+            usuario=layout.findViewById(R.id.usuario);
+            contrasena=layout.findViewById(R.id.contrasena2);
+            oldContrasena=layout.findViewById(R.id.contrasena);
+            usuario.setHint((currentUser.getDisplayName().toString()));
+            fotoperfil=layout.findViewById(R.id.fotoperfil);
+            editProfile=layout.findViewById(R.id.edit_profile);
+            displayName=layout.findViewById(R.id.displayName);
+            editProfilePanel=layout.findViewById(R.id.edit_profile_panel);
+            displayName.setText(currentUser.getDisplayName().toString());
+            /*FirebaseFirestore db = FirebaseFirestore.getInstance();*/
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            final StorageReference pathReference = storageRef.child("images/"+ currentUser.getEmail().toString()+".jpg");
+            Log.d("URL",pathReference.getDownloadUrl().toString());
 
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-        {
-            @Override
-            public void onSuccess(Uri downloadUrl)
+            pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
             {
-                Log.d("URL", downloadUrl.toString());
-                Picasso.with(getContext()).load(downloadUrl).into(fotoperfil);
-            }
-        });
+                @Override
+                public void onSuccess(Uri downloadUrl)
+                {
+                    Log.d("URL", downloadUrl.toString());
+                    Picasso.with(getContext()).load(downloadUrl).into(fotoperfil);
+                }
+            });
 
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editProfilePanel.setVisibility(View.VISIBLE);
-            }
-        });
+            editProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editProfilePanel.setVisibility(View.VISIBLE);
+                }
+            });
 
-        onClickGuardar(layout);
+            onClickGuardar(layout);
+        }
+
+
 
     }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_ranking))){
+        mAuth = FirebaseAuth.getInstance();
+        if((mAuth.getCurrentUser().getEmail().equalsIgnoreCase("invitado@testsaltour.com"))){
+            Toast.makeText(getContext(),"Regístrese para disfrutar de estas funcionalidades",Toast.LENGTH_LONG).show();
+            return null;
+        }
         return cargarEstadisticas(layout,inflater,container);
     }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_compartir))){
        layout = inflater.inflate(R.layout.compartir_fragment, container, false);
@@ -365,7 +386,9 @@ public class HomeContentFragment extends Fragment {
         logout(mAuth);
     }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_home))){
        layout = inflater.inflate(R.layout.home_fragment, container, false);
-       updateProgressBar(layout);
+        mAuth = FirebaseAuth.getInstance();
+        updateProgressBar(layout);
+
        /*Esto como guia para cargar un fragment desde otro fragment
             AVISO: NO SE ACTUALIZA EL MENU LATERAL, PARA ESTADISTICAS GENERALES DE VER UN PERFIL AJENO SELECCIONADO ESTARIA BIEN*/
        /*ProgressBar progressBar = layout.findViewById(R.id.progress_bar);
@@ -410,43 +433,51 @@ public class HomeContentFragment extends Fragment {
       final TextView ultimoJuego = layout.findViewById(R.id.t_ultimo_juego);
       final TextView tProgreso = layout.findViewById(R.id.t_progreso);
 
-      final FirebaseFirestore db = FirebaseFirestore.getInstance();
-      CollectionReference challenegesRef = db.collection("challenges");
-      challenegesRef.get()
-              .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                  @Override
-                  public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                      long totalChallenges = task.getResult().size();
-                      FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                      FirebaseUser currentUser = mAuth.getCurrentUser();
-                      bienvenidaUsuario.setText("Hola "+currentUser.getDisplayName());
-                      ultimoJuego.setText("Última conexión: 15/03/2022");
-                      tProgreso.setText("Progreso personal");
-                      SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
-                      Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
-                      long challengesCompleted = 0;
-                      for(String challenge : challengesAndTime){
-                          String [] partes = challenge.split("#");
-                          if(partes[1].contains("C")){
-                              challengesCompleted++;
+      FirebaseAuth mAuth = FirebaseAuth.getInstance();
+      if((mAuth.getCurrentUser().getEmail().equalsIgnoreCase("invitado@testsaltour.com"))){
+          RollPagerView rollPagerView = layout.findViewById(R.id.roll_view_pager);
+          rollPagerView.setPlayDelay(3000);
+          rollPagerView.setAnimationDurtion(500);
+          rollPagerView.setAdapter(new CarrouseelAdapter());
+          rollPagerView.setHintView(new ColorPointHintView(getContext(), Color.RED,Color.WHITE));
+          progressBar.setVisibility(View.INVISIBLE);
+      }else{
+          final FirebaseFirestore db = FirebaseFirestore.getInstance();
+          CollectionReference challenegesRef = db.collection("challenges");
+          challenegesRef.get()
+                  .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                      @Override
+                      public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                          long totalChallenges = task.getResult().size();
+                          FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                          FirebaseUser currentUser = mAuth.getCurrentUser();
+                          bienvenidaUsuario.setText("Hola "+currentUser.getDisplayName());
+                          ultimoJuego.setText("Última conexión: 15/03/2022");
+                          tProgreso.setText("Progreso personal");
+                          SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
+                          Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
+                          long challengesCompleted = 0;
+                          for(String challenge : challengesAndTime){
+                              String [] partes = challenge.split("#");
+                              if(partes[1].contains("C")){
+                                  challengesCompleted++;
+                              }
                           }
+
+                          long percentageCompleted = calculatePercentage(challengesCompleted,totalChallenges);
+                          ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, 0, percentageCompleted);
+                          anim.setDuration(1000);
+                          progressBar.startAnimation(anim);
+                          textView.setText(String.valueOf(percentageCompleted)+"% de los retos");
+
+                          RollPagerView rollPagerView = layout.findViewById(R.id.roll_view_pager);
+                          rollPagerView.setPlayDelay(3000);
+                          rollPagerView.setAnimationDurtion(500);
+                          rollPagerView.setAdapter(new CarrouseelAdapter());
+                          rollPagerView.setHintView(new ColorPointHintView(getContext(), Color.RED,Color.WHITE));
                       }
-
-                      long percentageCompleted = calculatePercentage(challengesCompleted,totalChallenges);
-                      ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, 0, percentageCompleted);
-                      anim.setDuration(1000);
-                      progressBar.startAnimation(anim);
-                      textView.setText(String.valueOf(percentageCompleted)+"% de los retos");
-
-                      RollPagerView rollPagerView = layout.findViewById(R.id.roll_view_pager);
-                      rollPagerView.setPlayDelay(3000);
-                      rollPagerView.setAnimationDurtion(500);
-                      rollPagerView.setAdapter(new CarrouseelAdapter());
-                      rollPagerView.setHintView(new ColorPointHintView(getContext(), Color.RED,Color.WHITE));
-                  }
-              });
-
-
+                  });
+      }
   }
 
   private long calculatePercentage(long actual,long total){
@@ -466,9 +497,22 @@ public class HomeContentFragment extends Fragment {
 
                         if(mAuth.getCurrentUser()!=null){
                             mAuth.signOut();
-                            Intent intent=new Intent(getContext(),LoginActivity.class);
-                            startActivity(intent);
-                            getActivity().finish();
+
+                            mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Intent intent=new Intent(getContext(),LoginActivity.class);
+                                        startActivity(intent);
+                                        getActivity().finish();
+                                    }else{
+                                        Intent intent=new Intent(getContext(),LoginActivity.class);
+                                        startActivity(intent);
+                                        getActivity().finish();
+                                    }
+                                }
+                            });
+
                         }
                     }
                 }).show();
