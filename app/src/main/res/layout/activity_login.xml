@@ -25,7 +25,7 @@
         android:ems="10"
         android:inputType="textEmailAddress"
         android:layout_marginTop="50dp"
-        android:hint="Email"/>
+        android:hint="@string/email"/>
 
     <EditText
         android:id="@+id/editTextTextPassword"
@@ -34,7 +34,7 @@
         android:ems="10"
         android:inputType="textPassword"
         android:layout_marginTop="60dp"
-        android:hint="Contraseña"/>
+        android:hint="@string/password"/>
 
     <Button
         android:id="@+id/b_entrar"
@@ -43,7 +43,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:onClick="onClickLogin"
-        android:text="Entrar"></Button>
+        android:text="@string/entrar"></Button>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/b_entrar_google"
@@ -62,7 +62,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:onClick="onClickLoginInvitado"
-        android:text="Entrar como invitado"></Button>
+        android:text="@string/entrar_invitado"></Button>
 
 
     <Button
@@ -72,7 +72,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:onClick="onClickRegistro"
-        android:text="Registrarse"></Button>
+        android:text="@string/registro"></Button>
 
     <TextView
         android:id="@+id/olvioContrasena"
@@ -82,7 +82,7 @@
         android:layout_marginTop="50dp"
         android:clickable="true"
         android:onClick="onClickForgotPassword"
-        android:text="Olvidé mi contraseña"
+        android:text="@string/olvidar_password"
         android:textColor="@android:color/holo_blue_light"
         android:textStyle="bold"></TextView>
 </LinearLayout>

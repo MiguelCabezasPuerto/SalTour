@@ -12,6 +12,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.miguelcabezas.tfm.saltour.utils.SalLib;
 
 import java.io.File;
 
@@ -70,7 +72,7 @@ public class HomeActivity extends AppCompatActivity
     setContentView(R.layout.activity_home);
     mAuth = FirebaseAuth.getInstance();
     if(mAuth.getCurrentUser().getDisplayName()!=null){
-      Toast.makeText(getApplicationContext(),"Bienvenido/a"+mAuth.getCurrentUser().getDisplayName(),Toast.LENGTH_LONG).show();
+      Toast.makeText(getApplicationContext(),getString(R.string.bienvenido)+" "+mAuth.getCurrentUser().getDisplayName(),Toast.LENGTH_LONG).show();
     }
 
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -101,7 +103,7 @@ public class HomeActivity extends AppCompatActivity
     currentUser.reload();
     nombreUsuario=header.findViewById(R.id.user);
     if(currentUser.getDisplayName()==null){
-      nombreUsuario.setText("Invitado");
+      nombreUsuario.setText(getString(R.string.invitado));
     }else{
       nombreUsuario.setText(currentUser.getDisplayName().toString());
     }
@@ -157,7 +159,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     if(mAuth.getCurrentUser().getEmail().equalsIgnoreCase("Invitado@testsaltour.com") && (title == R.id.nav_perfil || title == R.id.nav_ranking)){
-      Toast.makeText(getApplicationContext(),"Regístrese para disfrutar de estas funcionalidades",Toast.LENGTH_LONG).show();
+      Toast.makeText(getApplicationContext(),getString(R.string.funcionalidades),Toast.LENGTH_LONG).show();
     }else{
       Fragment fragment = HomeContentFragment.newInstance(getString(title),mAuth.getCurrentUser().getDisplayName());
       getSupportFragmentManager()
@@ -193,7 +195,7 @@ public class HomeActivity extends AppCompatActivity
     if(!(mAuth.getCurrentUser().getEmail().equalsIgnoreCase("invitado@testsaltour.com"))){
       user.setText(currentUser.getDisplayName().toString());
     }else{
-      user.setText("Invitado");
+      user.setText(getString(R.string.invitado));
     }
 
   }
@@ -329,6 +331,13 @@ public class HomeActivity extends AppCompatActivity
 
   private void permisoDeCamaraDenegado() {
     Log.d("DENEGADO","CÁMARA");
+  }
+
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    boolean handleReturn = super.dispatchTouchEvent(ev);
+    SalLib.hideKeyBoard(ev,getApplicationContext(),getCurrentFocus(),getWindow());
+    return handleReturn;
   }
 
 }

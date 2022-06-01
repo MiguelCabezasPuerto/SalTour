@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SalTour</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_click">Title click</string>
+    <string name="menu_home">Principal</string>
+    <string name="menu_jugar">Jouer</string>
+    <string name="menu_perfil">Mon profile</string>
+    <string name="menu_ranking">Statistiques</string>
+    <string name="menu_compartir">Partager</string>
+    <string name="menu_group">Sociale</string>
+    <string name="user">Utilisateur</string>
+    <string name="menu_ayuda">aide</string>
+    <string name="menu_salir">Logout</string>
+    <string name="tiene_dudas">tu as quelque question? Contacte avec nous!</string>
+    <string name="estadistica_individual">Individual</string>
+    <string name="estadistica_general">Géneral</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="email_recuperacion">Email de secours</string>
+    <string name="enviar">Envoyer</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="entrar">Login</string>
+    <string name="entrar_invitado">Login comme invité</string>
+    <string name="registro">Registrer</string>
+    <string name="olvidar_password">Mot de pas oubliée</string>
+    <string name="compartir_eslogan">Tu aimes? Partage avec le monde!</string>
+    <string name="detener">Arrêter</string>
+    <string name="escanear">Analyser QR</string>
+    <string name="old_password">Mot de pas anterieure</string>
+    <string name="new_password">Mot de pas nouvelle</string>
+    <string name="guardar">Sauvegarder</string>
+    <string name="reto_en_curso">Défi en cours, vous devez le terminer ou arrêter le temps avant den commencer un autre</string>
+    <string name="retos_completados">Défis terminés</string>
+    <string name="retos_en_curso">défis en cours</string>
+    <string name="introducir_email">Email obligatoire</string>
+    <string name="email_no_valido">Email interdit</string>
+    <string name="bienvenido">Salut</string>
+    <string name="invitado">Invité</string>
+    <string name="funcionalidades">Inscrivez-vous pour profiter de ces fonctionnalités</string>
+    <string name="porcentaje_retos">% des défis</string>
+    <string name="cerrar_sesion">Vous voulez faire logout?</string>
+    <string name="ultima_conexion">Dernier connection</string>
+    <string name="progreso_personal">Progres personel</string>
+    <string name="ocho_caracteres">Le nouveau mot de passe doit contenir au moins 8 caractères</string>
+    <string name="password_actualizada">Mot de passe mis à jour, pour la sécurité, ressaisissez-le</string>
+    <string name="password_no_actualizada">Erreur, mot de passe non mis à jour</string>
+    <string name="error_autenticacion">Erreur dauthentification</string>
+    <string name="datos_actualizados">Info mise à jour</string>
+    <string name="te_desafio">Je vous mets au défi de connaître Salamanque mieux que moi sur : http://ladespensadelahuertacharra.c1.biz/</string>
+    <string name="error_envio">Erreur dexpédition</string>
+    <string name="reto_erroneo">Ce nest pas le défis commencé</string>
+    <string name="tiempo_detenido">Temp arrêt</string>
+
+</resources>

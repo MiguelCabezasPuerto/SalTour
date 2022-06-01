@@ -16,6 +16,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.miguelcabezas.tfm.saltour.R;
 import com.miguelcabezas.tfm.saltour.model.User;
 import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 
@@ -83,11 +84,11 @@ public class ExpandableListDataPumpRanking {
                     Log.e(claves[1], "ELSE");
                 }
             }
-            expandableListDetail.put("Retos completados("+ itemsFinal.size()+")", itemsFinal);
-            expandableListDetail.put("Retos en curso("+ itemsEnCurso.size()+")", itemsEnCurso);
+            expandableListDetail.put(context.getString(R.string.retos_completados)+"("+ itemsFinal.size()+")", itemsFinal);
+            expandableListDetail.put(context.getString(R.string.retos_en_curso)+"("+ itemsEnCurso.size()+")", itemsEnCurso);
         }else{
-            expandableListDetail.put("Retos completados(0)", new ArrayList<String>());
-            expandableListDetail.put("Retos en curso(0)", new ArrayList<String>());
+            expandableListDetail.put(context.getString(R.string.retos_completados)+"(0)", new ArrayList<String>());
+            expandableListDetail.put(context.getString(R.string.retos_en_curso)+"(0)", new ArrayList<String>());
         }
 
         Log.e("List detail",expandableListDetail.toString());

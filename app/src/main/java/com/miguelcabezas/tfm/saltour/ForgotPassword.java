@@ -30,11 +30,11 @@ public class ForgotPassword extends AppCompatActivity {
     public void onClickResetear(View view){
 
         if(recuperacion.getText().toString().isEmpty()){
-            Toast.makeText(this,"Se debe introducir un email",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.introducir_email),Toast.LENGTH_LONG).show();
             return;
         }
         if(!validarEmail(recuperacion.getText().toString())){
-            Toast.makeText(this,"Email no válido",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.email_no_valido),Toast.LENGTH_LONG).show();
             return;
         }
         FirebaseAuth.getInstance().sendPasswordResetEmail(recuperacion.getText().toString())

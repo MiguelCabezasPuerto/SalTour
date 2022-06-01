@@ -142,7 +142,7 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
             public void onClick(View v) {
 
                 if(isAServiceRunning(CountTimeService.class)){
-                    Toast.makeText(context,"Reto en curso, debe finalizarlo o parar el tiempo antes de comenzar con otro",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,context.getString(R.string.reto_en_curso),Toast.LENGTH_LONG).show();
                 }else{
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     FirebaseUser currentUser = mAuth.getCurrentUser();

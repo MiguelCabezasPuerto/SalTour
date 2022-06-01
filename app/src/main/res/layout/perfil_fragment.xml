@@ -97,14 +97,14 @@
                 android:id="@+id/contrasena"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Antigua contraseña"
+                android:hint="@string/old_password"
                 android:inputType="textPassword"></EditText>
 
             <EditText
                 android:id="@+id/contrasena2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nueva contraseña"
+                android:hint="@string/new_password"
                 android:inputType="textPassword"></EditText>
             <Button
                 android:id="@+id/b_guardar_perfil"
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="Guardar"></Button>
+                android:text="@string/guardar"></Button>
         </LinearLayout>
 
 

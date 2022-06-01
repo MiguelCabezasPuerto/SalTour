@@ -24,7 +24,7 @@
         android:ems="10"
         android:inputType="textEmailAddress"
         android:layout_marginTop="50dp"
-        android:hint="Email"/>
+        android:hint="@string/email"/>
 
     <EditText
         android:id="@+id/editTextTextPassword"
@@ -33,7 +33,7 @@
         android:ems="10"
         android:inputType="textPassword"
         android:layout_marginTop="60dp"
-        android:hint="Contraseña"/>
+        android:hint="@string/password"/>
 
 
     <Button
@@ -43,6 +43,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:onClick="onClickRegistro"
-        android:text="Registrarse"></Button>
+        android:text="@string/registro"></Button>
 
 </LinearLayout>

@@ -19,13 +19,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -69,6 +72,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.rpc.context.AttributeContext;
 import com.miguelcabezas.tfm.saltour.model.User;
+import com.miguelcabezas.tfm.saltour.utils.SalLib;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPumpRanking;
 import com.miguelcabezas.tfm.saltour.view.adapter.CustomExpandableListAdapter;
 
@@ -622,4 +626,12 @@ public class LoginActivity extends AppCompatActivity{
     private void permisoDeCamaraDenegado() {
         Log.d("DENEGADO","CÁMARA");
     }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean handleReturn = super.dispatchTouchEvent(ev);
+        SalLib.hideKeyBoard(ev,getApplicationContext(),getCurrentFocus(),getWindow());
+        return handleReturn;
+    }
+
 }

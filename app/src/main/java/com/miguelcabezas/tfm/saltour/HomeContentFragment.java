@@ -259,7 +259,7 @@ public class HomeContentFragment extends Fragment {
     } else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_perfil))){
         mAuth = FirebaseAuth.getInstance();
         if((mAuth.getCurrentUser().getEmail().equalsIgnoreCase("invitado@testsaltour.com"))){
-            Toast.makeText(getContext(),"Regístrese para disfrutar de estas funcionalidades",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getString(R.string.funcionalidades),Toast.LENGTH_LONG).show();
         }else{
             layout = inflater.inflate(R.layout.perfil_fragment, container, false);
             FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -304,7 +304,7 @@ public class HomeContentFragment extends Fragment {
     }else if(getArguments().getString(TEXT).equalsIgnoreCase(getString(R.string.menu_ranking))){
         mAuth = FirebaseAuth.getInstance();
         if((mAuth.getCurrentUser().getEmail().equalsIgnoreCase("invitado@testsaltour.com"))){
-            Toast.makeText(getContext(),"Regístrese para disfrutar de estas funcionalidades",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getString(R.string.funcionalidades),Toast.LENGTH_LONG).show();
             return null;
         }
         return cargarEstadisticas(layout,inflater,container);
@@ -451,9 +451,9 @@ public class HomeContentFragment extends Fragment {
                           long totalChallenges = task.getResult().size();
                           FirebaseAuth mAuth = FirebaseAuth.getInstance();
                           FirebaseUser currentUser = mAuth.getCurrentUser();
-                          bienvenidaUsuario.setText("Hola "+currentUser.getDisplayName());
-                          ultimoJuego.setText("Última conexión: 15/03/2022");
-                          tProgreso.setText("Progreso personal");
+                          bienvenidaUsuario.setText(getString(R.string.bienvenido)+" "+currentUser.getDisplayName());
+                          ultimoJuego.setText(getString(R.string.ultima_conexion)+" " + currentUser.getMetadata().getLastSignInTimestamp());
+                          tProgreso.setText(getString(R.string.progreso_personal));
                           SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
                           Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
                           long challengesCompleted = 0;
@@ -468,7 +468,7 @@ public class HomeContentFragment extends Fragment {
                           ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, 0, percentageCompleted);
                           anim.setDuration(1000);
                           progressBar.startAnimation(anim);
-                          textView.setText(String.valueOf(percentageCompleted)+"% de los retos");
+                          textView.setText(String.valueOf(percentageCompleted)+getString(R.string.porcentaje_retos));
 
                           RollPagerView rollPagerView = layout.findViewById(R.id.roll_view_pager);
                           rollPagerView.setPlayDelay(3000);
@@ -488,7 +488,7 @@ public class HomeContentFragment extends Fragment {
   private void logout(final FirebaseAuth mAuth) {
         new AlertDialog.Builder(getContext())
                 .setIcon(R.mipmap.ic_launcher)
-                .setTitle("¿Realmente desea cerrar sesión?")
+                .setTitle(getString(R.string.cerrar_sesion))
                 .setCancelable(false)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -545,7 +545,7 @@ public class HomeContentFragment extends Fragment {
                 }
                 if(nuevaContrasena!=null && !nuevaContrasena.isEmpty()){
                     if(nuevaContrasena.length()<8){
-                        Toast.makeText(getContext(),"La nueva contraseña debe contener al menos 8 caracteres",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),getString(R.string.ocho_caracteres),Toast.LENGTH_LONG).show();
                         e_new_passwd.setBackgroundResource(R.drawable.borderojo);
                         return;
                     }
@@ -561,25 +561,25 @@ public class HomeContentFragment extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(getContext(),"Contraseña actualizada, por seguridad, vuelva a entrar",Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(),getString(R.string.password_actualizada),Toast.LENGTH_LONG).show();
                                                     Intent intent=new Intent(getContext(),LoginActivity.class);
                                                     startActivity(intent);
                                                     mAuth.signOut();
                                                     getActivity().finish();
                                                 } else {
-                                                    Toast.makeText(getContext(),"Error, contraseña no actualizada",Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(),getString(R.string.password_no_actualizada),Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(getContext(),"Error de autenticación",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(),getString(R.string.error_autenticacion),Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
                 }
                 LinearLayout editProfilePanel = layout.findViewById(R.id.edit_profile_panel);
                 editProfilePanel.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getContext(),"Datos actualizados",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),getString(R.string.datos_actualizados),Toast.LENGTH_LONG).show();
 
             }
         });
@@ -589,27 +589,27 @@ public class HomeContentFragment extends Fragment {
     private void onClickCompartirOtros(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, "Te desafío a conocer mejor que yo Salamanca en: http://ladespensadelahuertacharra.c1.biz/");
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.te_desafio));
         startActivity(Intent.createChooser(intent, "Share with"));
     }
     private void onClickCompartirFacebook(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, "Te desafío a conocer mejor que yo Salamanca en: http://ladespensadelahuertacharra.c1.biz/");
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.te_desafio));
         intent.setPackage("com.facebook.katana");
         startActivity(intent);
     }
     private void onClickCompartirWhatsApp(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, "Te desafío a conocer mejor que yo Salamanca en: http://ladespensadelahuertacharra.c1.biz//");
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.te_desafio));
         intent.setPackage("com.whatsapp");
         startActivity(intent);
     }
     private void onClickCompartirTwitter(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, "Te desafío a conocer mejor que yo Salamanca en: http://ladespensadelahuertacharra.c1.biz/");
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.te_desafio));
         intent.setPackage("com.twitter.android");
         startActivity(intent);
     }
@@ -617,12 +617,12 @@ public class HomeContentFragment extends Fragment {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("text/html");
         emailIntent.putExtra(Intent.EXTRA_SUBJECT,"SalTour");
-        emailIntent.putExtra(Intent.EXTRA_TEXT,"Te desafío a conocer mejor que yo Salamanca en: http://ladespensadelahuertacharra.c1.biz/");
+        emailIntent.putExtra(Intent.EXTRA_TEXT,getString(R.string.te_desafio));
 
         try {
             getContext().startActivity(Intent.createChooser(emailIntent, "Compartir"));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getContext(),"Error en el envío",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getString(R.string.error_envio),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -762,7 +762,7 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }else if(token.equalsIgnoreCase("https://tendido1.com/wp-content/uploads/2020/12/qrmenu.jpeg")){ //rana
                                 Log.d("RETO","rana");
@@ -775,7 +775,7 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }else if(token.equalsIgnoreCase("https://forms.gle/6151QniEnpo6SNAm7")){ //plaza
                                 Log.d("RETO","plaza");
@@ -788,7 +788,7 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }else if(token.equalsIgnoreCase("")){ //jardin
                                 Log.d("RETO","jardin");
@@ -801,7 +801,7 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }
                         }
@@ -823,7 +823,7 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }else if(token.equalsIgnoreCase(String.valueOf(EnumRetos.plaza))){
                                 Log.e("RETO","plaza");
@@ -835,7 +835,7 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }else if(token.equalsIgnoreCase(String.valueOf(EnumRetos.jardín))){
                                 Log.e("RETO","jardin");
@@ -847,7 +847,7 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }else if(token.equalsIgnoreCase(String.valueOf(EnumRetos.callejeros))){
                                 Log.d("RETO","pingüinos");
@@ -860,11 +860,11 @@ public class HomeContentFragment extends Fragment {
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
-                                    Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
                             }else{
                                 Log.e("Reto","No es el reto iniciado");
-                                Toast.makeText(getActivity(),"No es el reto iniciado",Toast.LENGTH_LONG);
+                                Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                             }
                         }
 
@@ -999,7 +999,7 @@ public class HomeContentFragment extends Fragment {
                     editor.putStringSet("ChallenegesCompleted#"+emailUser,set);
                     editor.apply();
                     editor.commit();
-                    Toast.makeText(getContext(),"Tiempo detenido",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),getString(R.string.tiempo_detenido),Toast.LENGTH_LONG).show();
                 }
             }
         });

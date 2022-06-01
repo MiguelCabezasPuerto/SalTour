@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.miguelcabezas.tfm.saltour.utils.SalLib;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -164,5 +166,11 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean handleReturn = super.dispatchTouchEvent(ev);
+        SalLib.hideKeyBoard(ev,getApplicationContext(),getCurrentFocus(),getWindow());
+        return handleReturn;
     }
 }
