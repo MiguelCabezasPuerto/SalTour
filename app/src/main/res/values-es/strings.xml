@@ -52,4 +52,20 @@
     <string name="error_envio">Error en el envío</string>
     <string name="reto_erroneo">No es el reto iniciado</string>
     <string name="tiempo_detenido">Tiempo detenido</string>
+    <string name="introducir_password">Se debe introducir una contraseña</string>
+    <string name="comprobando_datos">Comprobando datos...</string>
+    <string name="correo_no_verificado">Correo no verificado</string>
+    <string name="recibir_verificacion">¿Desea recibir de nuevo el email de verificación?</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="reenviada_verificacion">Reenviado correo de verificación</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="credenciales_incorrectas">Usuario y/o contraseña incorrecto</string>
+    <string name="activar_ubicacion">Active la ubicación del dispositivo</string>
+    <string name="error_imagen">Error al recuperar la imagen</string>
+    <string name="position">posición</string>
+    <string name="retos_completados2">retos superados</string>
+    <string name="jugadores_activos">Jugadores activos:</string>
+    <string name="enviada_verificacion">Enviado correo de verificación</string>
+    <string name="usuario_existente">Usuario ya existente</string>
+    <string name="registro_no_completado">No se pudo completar el registro</string>
 </resources>

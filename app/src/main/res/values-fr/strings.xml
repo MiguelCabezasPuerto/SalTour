@@ -52,5 +52,21 @@
     <string name="error_envio">Erreur dexpédition</string>
     <string name="reto_erroneo">Ce nest pas le défis commencé</string>
     <string name="tiempo_detenido">Temp arrêt</string>
+    <string name="introducir_password">Vous devez ibntroduire un mot de pas</string>
+    <string name="comprobando_datos">Vérification des donées...</string>
+    <string name="correo_no_verificado">Lemail nest pas verifié</string>
+    <string name="recibir_verificacion">Vous voulez recevoir le message de vérification encore une autre fois?</string>
+    <string name="aceptar">Accepter</string>
+    <string name="reenviada_verificacion">Message de vérification reenvoyé</string>
+    <string name="cancelar">Annuler</string>
+    <string name="credenciales_incorrectas">Nom et/ou mot de pas incorrect</string>
+    <string name="activar_ubicacion">Vous devez activer votre localisation</string>
+    <string name="error_imagen">Erreur lors de la récupération de limage</string>
+    <string name="position">position</string>
+    <string name="retos_completados2">défis terminés</string>
+    <string name="jugadores_activos">Joueurs actifs:</string>
+    <string name="enviada_verificacion">Message de vérification envoyé</string>
+    <string name="usuario_existente">Le mail est déjà utilisé</string>
+    <string name="registro_no_completado">Il ya eu un erreur pendant linscription. Réessayez</string>
 
 </resources>

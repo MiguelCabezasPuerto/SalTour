@@ -54,4 +54,20 @@
     <string name="error_envio">Sending error</string>
     <string name="reto_erroneo">This challenge is not started</string>
     <string name="tiempo_detenido">Stop time</string>
+    <string name="introducir_password">You must enter a password</string>
+    <string name="comprobando_datos">Verifying data...</string>
+    <string name="correo_no_verificado">Non verified email</string>
+    <string name="recibir_verificacion">Do you want us to resend the verification email again?</string>
+    <string name="aceptar">OK</string>
+    <string name="reenviada_verificacion">Verification mail resent</string>
+    <string name="cancelar">Cancel</string>
+    <string name="credenciales_incorrectas">Wrong user or password</string>
+    <string name="activar_ubicacion">You mus activate your location</string>
+    <string name="error_imagen">An error occured while retrieving image</string>
+    <string name="position">position</string>
+    <string name="retos_completados2">challenges completed</string>
+    <string name="jugadores_activos">Active users:</string>
+    <string name="enviada_verificacion">Verification mail sent</string>
+    <string name="usuario_existente">Existing user</string>
+    <string name="registro_no_completado">Error while registering. Try it again</string>
 </resources>

@@ -96,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(),"An error occured while retrieving image",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.error_imagen),Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (IOException e) {
@@ -105,8 +105,8 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         t_nickname.setText(email);
-        t_position.setText(position+" position");
-        t_challenges.setText(totalChallenges+" challenges completed");
+        t_position.setText(position+" "+ getString(R.string.position));
+        t_challenges.setText(totalChallenges+" "+ getString(R.string.retos_completados2));
     }
 
     @Override

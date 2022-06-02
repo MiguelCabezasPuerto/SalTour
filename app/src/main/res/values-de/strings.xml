@@ -52,4 +52,20 @@
     <string name="error_envio">Versandfehler</string>
     <string name="reto_erroneo">Es ist nicht die Herausforderung gestartet</string>
     <string name="tiempo_detenido">gestoppte Zeit</string>
+    <string name="introducir_password">Ein Passwort muss eingegeben werden</string>
+    <string name="comprobando_datos">Überprüfe Daten....</string>
+    <string name="correo_no_verificado">Unbestätigte email</string>
+    <string name="recibir_verificacion">Möchten Sie die Bestätigungs-E-Mail erneut erhalten?</string>
+    <string name="aceptar">OK</string>
+    <string name="reenviada_verificacion">Bestätigungs-E-Mail erneut senden</string>
+    <string name="cancelar">Abbrechen</string>
+    <string name="credenciales_incorrectas">Falscher Benutzername und/oder Passwort</string>
+    <string name="activar_ubicacion">Geräteortung aktivieren</string>
+    <string name="error_imagen">Fehler beim Abrufen des Bildes</string>
+    <string name="position">position</string>
+    <string name="retos_completados2">Herausforderungen abgeschlossen</string>
+    <string name="jugadores_activos">Aktive Spieler:</string>
+    <string name="enviada_verificacion">Bestätigungs-E-Mail gesendet</string>
+    <string name="usuario_existente">Bereits bestehender Benutzer</string>
+    <string name="registro_no_completado">Konnte Registrierung nicht abschließen</string>
 </resources>

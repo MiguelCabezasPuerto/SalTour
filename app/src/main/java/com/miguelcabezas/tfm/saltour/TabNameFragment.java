@@ -234,7 +234,7 @@ public class TabNameFragment extends Fragment {
                                         desafios_jugador.setText(ownUser.getChallengesCompleted()+" " );
                                         tiempo_jugador.setText(String.valueOf(SalLib.convertToHHMMSS((long)ownUser.getChallengesCompleted_totalTime())));
                                         t_jugador.setTypeface(null, Typeface.BOLD);
-                                        t_activos.setText("Jugadores activos: "+activeUsers);
+                                        t_activos.setText(getString(R.string.jugadores_activos)+" "+activeUsers);
                                         c_jugador3.setVisibility(View.INVISIBLE);
                                     }else{
                                         t_jugador1.setText("1)"+users.get(0).getEmail());
@@ -250,7 +250,7 @@ public class TabNameFragment extends Fragment {
                                         desafios_jugador.setText(ownUser.getChallengesCompleted()+" " );
                                         tiempo_jugador.setText(String.valueOf(SalLib.convertToHHMMSS((long)ownUser.getChallengesCompleted_totalTime())));
                                         t_jugador.setTypeface(null, Typeface.BOLD);
-                                        t_activos.setText("Jugadores activos: "+activeUsers);
+                                        t_activos.setText(getString(R.string.jugadores_activos)+" "+activeUsers);
                                         c_jugador.setCardBackgroundColor(Color.LTGRAY);
                                     }
                                     switch (ownPosition){
@@ -264,7 +264,7 @@ public class TabNameFragment extends Fragment {
                                             desafios_jugador_1.setText(ownUser.getChallengesCompleted()+" " );
                                             tiempo_jugador_1.setText(String.valueOf(SalLib.convertToHHMMSS((long)ownUser.getChallengesCompleted_totalTime())));
                                             t_jugador1.setTypeface(null, Typeface.BOLD);
-                                            t_activos.setText("Jugadores activos: "+activeUsers);
+                                            t_activos.setText(getString(R.string.jugadores_activos)+" "+activeUsers);
                                             c_jugador1.setCardBackgroundColor(Color.LTGRAY);
                                             break;
                                         case 2:
@@ -274,7 +274,7 @@ public class TabNameFragment extends Fragment {
                                             desafios_jugador_2.setText(ownUser.getChallengesCompleted()+" " );
                                             tiempo_jugador_2.setText(String.valueOf(SalLib.convertToHHMMSS((long)ownUser.getChallengesCompleted_totalTime())));
                                             t_jugador2.setTypeface(null, Typeface.BOLD);
-                                            t_activos.setText("Jugadores activos: "+activeUsers);
+                                            t_activos.setText(getString(R.string.jugadores_activos)+" "+activeUsers);
                                             c_jugador2.setCardBackgroundColor(Color.LTGRAY);
                                             break;
                                         case 3:
@@ -284,7 +284,7 @@ public class TabNameFragment extends Fragment {
                                             desafios_jugador_3.setText(ownUser.getChallengesCompleted()+" " );
                                             tiempo_jugador_3.setText(String.valueOf(SalLib.convertToHHMMSS((long)ownUser.getChallengesCompleted_totalTime())));
                                             t_jugador3.setTypeface(null, Typeface.BOLD);
-                                            t_activos.setText("Jugadores activos: "+activeUsers);
+                                            t_activos.setText(getString(R.string.jugadores_activos)+" "+activeUsers);
                                             c_jugador3.setCardBackgroundColor(Color.LTGRAY);
                                             break;
                                         default:

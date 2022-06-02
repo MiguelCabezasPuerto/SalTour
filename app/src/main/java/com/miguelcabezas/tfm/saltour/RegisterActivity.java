@@ -59,22 +59,22 @@ public class RegisterActivity extends AppCompatActivity {
         String usuario_text=usuario.getText().toString().trim();
         String contrasena_text=contrasena.getText().toString().trim();
         if(usuario_text.isEmpty()){
-            Toast.makeText(this,"Se debe introducir un email",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.introducir_email),Toast.LENGTH_LONG).show();
             usuario.setBackgroundResource(R.drawable.borderojo);
             return;
         }
         if(contrasena_text.isEmpty()){
-            Toast.makeText(this,"Se debe introducir contraseña",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.introducir_password),Toast.LENGTH_LONG).show();
             contrasena.setBackgroundResource(R.drawable.borderojo);
             return;
         }
         if(contrasena_text.length()<8){
-            Toast.makeText(this,"La contraseña debe contener al menos 8 caracteres",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.ocho_caracteres),Toast.LENGTH_LONG).show();
             contrasena.setBackgroundResource(R.drawable.borderojo);
             return;
         }
         if(!validarEmail(usuario_text)){
-            Toast.makeText(this,"Email no válido",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.email_no_valido),Toast.LENGTH_LONG).show();
             usuario.setBackgroundResource(R.drawable.borderojo);
             return;
         }
@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                     uploadTask.addOnFailureListener(new OnFailureListener() {
                                                                         @Override
                                                                         public void onFailure(@NonNull Exception exception) {
-                                                                            Toast.makeText(getApplicationContext(),"FAIL IMAGE",Toast.LENGTH_LONG).show();
+                                                                            Toast.makeText(getApplicationContext(),getString(R.string.error_imagen),Toast.LENGTH_LONG).show();
                                                                         }
                                                                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                                         @Override
@@ -131,7 +131,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                     newUser.put("challengesAndTime",new HashMap<String,String>());
                                                                     db.collection("users").document(currentUser.getEmail()).set(newUser);
                                                                     /*db.collection("users").add(newUser);*/
-                                                                    Toast.makeText(RegisterActivity.this,"Enviado correo de verificación",Toast.LENGTH_LONG).show();
+                                                                    Toast.makeText(RegisterActivity.this,getString(R.string.enviada_verificacion),Toast.LENGTH_LONG).show();
                                                                     Intent returnIntent=new Intent();
                                                                     setResult(RESULT_OK,returnIntent);
                                                                     finish();
@@ -148,10 +148,10 @@ public class RegisterActivity extends AppCompatActivity {
                             contrasena.setBackgroundResource(0);
                         }else{
                             if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                                Toast.makeText(RegisterActivity.this,"Usuario ya existente",Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this,getString(R.string.usuario_existente),Toast.LENGTH_LONG).show();
                                 usuario.setBackgroundResource(R.drawable.borderojo);
                             }else{
-                                Toast.makeText(RegisterActivity.this,"No se pudo completar el registro",Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this,getString(R.string.registro_no_completado),Toast.LENGTH_LONG).show();
                                 usuario.setBackgroundResource(0);
                                 contrasena.setBackgroundResource(0);
                             }

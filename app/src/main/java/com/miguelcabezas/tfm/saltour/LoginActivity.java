@@ -324,22 +324,22 @@ public class LoginActivity extends AppCompatActivity{
         final String usuario_text=usuario.getText().toString().trim();
         String contrasena_text=contrasena.getText().toString().trim();
         if(usuario_text.isEmpty()){
-            Toast.makeText(this,"Se debe introducir un email",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.introducir_email),Toast.LENGTH_LONG).show();
             return;
         }
         if(contrasena_text.isEmpty()){
-            Toast.makeText(this,"Se debe introducir contraseña",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.introducir_password),Toast.LENGTH_LONG).show();
             return;
         }
         if(contrasena_text.length()<8){
-            Toast.makeText(this,"La contraseña debe contener al menos 8 caracteres",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.ocho_caracteres),Toast.LENGTH_LONG).show();
             return;
         }
         if(!validarEmail(usuario_text)){
-            Toast.makeText(this,"Email no válido",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.email_no_valido),Toast.LENGTH_LONG).show();
             return;
         }
-        progressDialog.setMessage("Comprobando datos...");
+        progressDialog.setMessage(getString(R.string.comprobando_datos));
         progressDialog.show();
 
         mAuth.signInWithEmailAndPassword(usuario_text,contrasena_text)
@@ -411,21 +411,21 @@ public class LoginActivity extends AppCompatActivity{
 
                             }else{
                                 AlertDialog.Builder confirmacion = new AlertDialog.Builder(LoginActivity.this);
-                                confirmacion.setTitle("Correo no verificado");
-                                confirmacion.setMessage("¿Desea recibir de nuevo el email de verificación?");
+                                confirmacion.setTitle(getString(R.string.correo_no_verificado));
+                                confirmacion.setMessage(getString(R.string.recibir_verificacion));
                                 confirmacion.setCancelable(false);
-                                confirmacion.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                confirmacion.setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         currentUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(LoginActivity.this,"Reenviado correo de verificación",Toast.LENGTH_LONG).show();
+                                                Toast.makeText(LoginActivity.this,getString(R.string.reenviada_verificacion),Toast.LENGTH_LONG).show();
                                             }
                                         });
                                     }
                                 });
-                                confirmacion.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                confirmacion.setNegativeButton(getString(R.string.cancelar), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         mAuth.signOut();
@@ -442,7 +442,7 @@ public class LoginActivity extends AppCompatActivity{
 
 
                         }else{
-                            Toast.makeText(LoginActivity.this,"Usuario y/o contraseña incorrecto",Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this,getString(R.string.credenciales_incorrectas),Toast.LENGTH_LONG).show();
                             usuario.setText("");
                             contrasena.setText("");
                             usuario.setBackgroundResource(R.drawable.borderojo);

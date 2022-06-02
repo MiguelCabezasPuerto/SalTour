@@ -88,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"Active la ubicación del dispositivo",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.activar_ubicacion),Toast.LENGTH_LONG).show();
                 }
 
 

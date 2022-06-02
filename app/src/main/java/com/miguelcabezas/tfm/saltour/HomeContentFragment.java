@@ -737,7 +737,6 @@ public class HomeContentFragment extends Fragment {
 
                     // obtenemos el token
                     token = barcodes.valueAt(0).displayValue.toString();
-                    Log.e("QR","token detected "+token);
                     // verificamos que el token anterior no se igual al actual
                     // esto es util para evitar multiples llamadas empleando el mismo token
                     if (!token.equals(tokenanterior)) {
@@ -757,8 +756,7 @@ public class HomeContentFragment extends Fragment {
                                     Log.d("Reto","parado");
                                     if(isAServiceRunning(CountTimeService.class)){
                                         getActivity().stopService(new Intent(getContext(), CountTimeService.class));
-                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
-                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(5000,emailUser,activeChallengeSingleton.getName()));
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
@@ -770,8 +768,7 @@ public class HomeContentFragment extends Fragment {
                                     Log.d("Reto","parado");
                                     if(isAServiceRunning(CountTimeService.class)){
                                         getActivity().stopService(new Intent(getContext(), CountTimeService.class));
-                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
-                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(5000,emailUser,activeChallengeSingleton.getName()));
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
@@ -783,21 +780,19 @@ public class HomeContentFragment extends Fragment {
                                     Log.d("Reto","parado");
                                     if(isAServiceRunning(CountTimeService.class)){
                                         getActivity().stopService(new Intent(getContext(), CountTimeService.class));
-                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
-                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(5000,emailUser,activeChallengeSingleton.getName()));
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
                                     Toast.makeText(getActivity(),getString(R.string.reto_erroneo),Toast.LENGTH_LONG);
                                 }
-                            }else if(token.equalsIgnoreCase("")){ //jardin
+                            }else if(token.equalsIgnoreCase("http://blog.uptodown.com/")){ //jardin
                                 Log.d("RETO","jardin");
                                 if(activeChallengeSingleton.getName().contains("jardín")){
                                     Log.d("Reto","parado");
                                     if(isAServiceRunning(CountTimeService.class)){
                                         getActivity().stopService(new Intent(getContext(), CountTimeService.class));
-                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
-                                        getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
+                                        getActivity().runOnUiThread(esperarYActualizar(5000,emailUser,activeChallengeSingleton.getName()));
                                     }
                                 }else{
                                     Log.e("Reto","No es el reto iniciado");
@@ -855,7 +850,6 @@ public class HomeContentFragment extends Fragment {
                                     Log.d("Reto","parado");
                                     if(isAServiceRunning(CountTimeService.class)){
                                         getActivity().stopService(new Intent(getContext(), CountTimeService.class));
-                                        getActivity().runOnUiThread(esperarYActualizar(100000,emailUser,activeChallengeSingleton.getName()));
                                         getActivity().runOnUiThread(esperarYActualizar(3000,emailUser,activeChallengeSingleton.getName()));
                                     }
                                 }else{
@@ -902,47 +896,57 @@ public class HomeContentFragment extends Fragment {
   }
 
   private void updateUserData(final String emailUser, final String challengeName){
-      FirebaseFirestore db = FirebaseFirestore.getInstance();
-      CollectionReference dbUsers = db.collection("users");
 
-      final DocumentReference userSelected = db.collection("users").document(emailUser);
+      if(!(emailUser.equalsIgnoreCase("invitado@testsaltour.com"))){
+          FirebaseFirestore db = FirebaseFirestore.getInstance();
+          CollectionReference dbUsers = db.collection("users");
 
-      /*userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime"))+difference)/(((Long)document.get("challengesCompleted"))+1));*//*Esto lo hara la actividad de escaner en caso de reto completado*/
-      /*userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);*//*Esto lo hara la actividad de escaner en caso de reto completado*/
-      userSelected.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-          @Override
-          public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-              DocumentSnapshot document = task.getResult();
-              if(document.exists()){
-                  Map<String,String> challengesAndTime = (Map<String, String>) document.get("challengesAndTime");
-                  if(challengesAndTime != null && !challengesAndTime.isEmpty() && challengesAndTime.get(challengeName)!=null){
-                      String tiempo = challengesAndTime.get(challengeName);
-                      challengesAndTime.put(challengeName,tiempo+"C");
+          final DocumentReference userSelected = db.collection("users").document(emailUser);
+
+          /*userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime"))+difference)/(((Long)document.get("challengesCompleted"))+1));*//*Esto lo hara la actividad de escaner en caso de reto completado*/
+          /*userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);*//*Esto lo hara la actividad de escaner en caso de reto completado*/
+          userSelected.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+              @Override
+              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                  DocumentSnapshot document = task.getResult();
+                  if(document.exists()){
+                      Map<String,String> challengesAndTime = (Map<String, String>) document.get("challengesAndTime");
+                      if(challengesAndTime != null && !challengesAndTime.isEmpty() && challengesAndTime.get(challengeName)!=null){
+                          String tiempo = challengesAndTime.get(challengeName);
+                          challengesAndTime.put(challengeName,tiempo+"C");
+                      }
+                      Set<String>set=new HashSet<>();
+                      for (Map.Entry<String, String> entry : challengesAndTime.entrySet()) {
+                          Log.e(entry.getKey(), String.valueOf(entry.getValue()));
+                          set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
+                      }
+                      userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime")))/(((Long)document.get("challengesCompleted"))+1));//*Esto lo hara la actividad de escaner en caso de reto completado*/
+                      userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);//*Esto lo hara la actividad de escaner en caso de reto completado*/
+                      userSelected.update("challengesAndTime",challengesAndTime);
+                      /*La actividad de escaner deberá actualizar SharedPreferences con lo siguiente (ya que se utiliza en la barra de progreso  -> updateProgressBar(...) , en jugar para marcar con colores y en estadisticas individuales*/
+                      SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+emailUser, 0);
+                      SharedPreferences.Editor editor = myPrefs.edit();
+                      editor.putStringSet("ChallenegesCompleted#"+emailUser,set);
+                      editor.apply();
+                      editor.commit();
+                      Log.d("#################","RETO GUARDADO COMPLETADO");
+                      Toast.makeText(getContext(),challengeName+" COMPLETADO",Toast.LENGTH_LONG).show();
+
+
+                      /*AQUI LLAMAR A AR QUE DE DATOS DEL SITIO*/
+                      Log.e("#################","TO AR");
+                      Intent LaunchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.DefaultCompany.CharacterTalking");
+                      startActivityForResult(LaunchIntent,2);
+
                   }
-                  Set<String>set=new HashSet<>();
-                  for (Map.Entry<String, String> entry : challengesAndTime.entrySet()) {
-                      Log.e(entry.getKey(), String.valueOf(entry.getValue()));
-                      set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
-                  }
-                  userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime")))/(((Long)document.get("challengesCompleted"))+1));//*Esto lo hara la actividad de escaner en caso de reto completado*/
-                  userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);//*Esto lo hara la actividad de escaner en caso de reto completado*/
-                  userSelected.update("challengesAndTime",challengesAndTime);
-                    /*La actividad de escaner deberá actualizar SharedPreferences con lo siguiente (ya que se utiliza en la barra de progreso  -> updateProgressBar(...) , en jugar para marcar con colores y en estadisticas individuales*/
-                    SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+emailUser, 0);
-                                                    SharedPreferences.Editor editor = myPrefs.edit();
-                                                    editor.putStringSet("ChallenegesCompleted#"+emailUser,set);
-                                                    editor.apply();
-                                                    editor.commit();
-                  Log.d("#################","RETO GUARDADO COMPLETADO");
-                  Toast.makeText(getContext(),challengeName+" COMPLETADO",Toast.LENGTH_LONG).show();
-                  /*AQUI LLAMAR A AR QUE DE DATOS DEL SITIO*/
-                  Log.d("#################","TO AR");
-                  Intent LaunchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.DefaultCompany.CharacterTalking");
-                  startActivityForResult(LaunchIntent,2);
-
               }
-          }
-      });
+          });
+      }else{
+          Log.e("#################","TO AR invitado");
+          Intent LaunchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.DefaultCompany.CharacterTalking");
+          startActivityForResult(LaunchIntent,2);
+      }
+
   }
 
     public Runnable esperarYActualizar(final int milisegundos, final String email, final String challengeName) {
