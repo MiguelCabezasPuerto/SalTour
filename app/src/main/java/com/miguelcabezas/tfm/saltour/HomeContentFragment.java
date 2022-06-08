@@ -920,6 +920,7 @@ public class HomeContentFragment extends Fragment {
                           Log.e(entry.getKey(), String.valueOf(entry.getValue()));
                           set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
                       }
+                      /*Revisar totalTime*/
                       userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime")))/(((Long)document.get("challengesCompleted"))+1));//*Esto lo hara la actividad de escaner en caso de reto completado*/
                       userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);//*Esto lo hara la actividad de escaner en caso de reto completado*/
                       userSelected.update("challengesAndTime",challengesAndTime);

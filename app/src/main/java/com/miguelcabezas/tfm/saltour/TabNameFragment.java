@@ -210,6 +210,7 @@ public class TabNameFragment extends Fragment {
 
                                 if (users != null && !users.isEmpty()){
                                     if(users.size()==1){
+
                                         t_jugador1.setText("1)"+users.get(0).getEmail());
 
                                         t_jugador.setText(ownPosition+")" +ownUser.getEmail());

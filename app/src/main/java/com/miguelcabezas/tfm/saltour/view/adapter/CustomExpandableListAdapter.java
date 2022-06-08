@@ -53,7 +53,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.expandedListItem);
         TextView expandedListTextViewTime = (TextView) convertView.findViewById(R.id.expandedListItemTime);
         expandedListTextView.setText(challenge_time[0]);
-        expandedListTextViewTime.setText(SalLib.convertToHHMMSS(Long.parseLong(SalLib.removeLastCharacter(challenge_time[1]))));
+        expandedListTextViewTime.setText(SalLib.convertToHHMMSS(Long.parseLong(challenge_time[1])));
         ImageView challengeImageView = convertView.findViewById(R.id.challenge_player_imageview);
 
         if(challenge_time[0].contains(String.valueOf(EnumRetos.rana))){
