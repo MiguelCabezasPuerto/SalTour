@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.miguelcabezas.tfm.saltour.controller.RankingController;
 import com.miguelcabezas.tfm.saltour.model.User;
 import com.miguelcabezas.tfm.saltour.utils.SalLib;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPump;
@@ -130,7 +131,13 @@ public class TabNameFragment extends Fragment {
             c_jugador = layout.findViewById(R.id.ranking_jugador);
             t_activos = layout.findViewById(R.id.ranking_jugadores_activos);
             /*Poner bonito y sacar datos de top3 jugadores, posicion del jugador y numero de jugadores activos de BBDD*/
-            final ArrayList<User>users = new ArrayList<>();
+            RankingController rankingController = new RankingController();
+            rankingController.processRanking(getContext(),getActivity(),t_jugador1,t_jugador2,t_jugador3,t_jugador,desafios_jugador_1,
+                    desafios_jugador_2,desafios_jugador_3, desafios_jugador,
+                    tiempo_jugador_1,tiempo_jugador_2,tiempo_jugador_3,tiempo_jugador, t_activos,
+                    c_jugador1,c_jugador2,c_jugador3,c_jugador,
+                    ver_jugador1,ver_jugador2,ver_jugador3);
+            /*final ArrayList<User>users = new ArrayList<>();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference usersRef = db.collection("users");
             usersRef.orderBy("challengesCompleted_totalTime")
@@ -158,10 +165,10 @@ public class TabNameFragment extends Fragment {
                                             if(document.getData().get("totalTime") != null){
                                                 user.setTotalTime(Long.parseLong(document.getData().get("totalTime").toString()));
                                             }
-                                    /*if(document.getData().get("challengesTime") != null){
+                                    *//*if(document.getData().get("challengesTime") != null){
                                         ArrayList<Long> newList = new ArrayList<Long>((Integer) document.getData().get("challengesTime"));
                                         user.setChallengesTime(newList);
-                                    }*/
+                                    }*//*
                                             if(document.getData().get("challengesCompleted_totalTime") != null){
                                                 user.setChallengesCompleted_totalTime(Float.parseFloat(document.getData().get("challengesCompleted_totalTime").toString()));
                                             }
@@ -292,7 +299,7 @@ public class TabNameFragment extends Fragment {
                                             break;
                                     }
 
-                                    /*Llamar a un fragment pasando el email, retos, posicion y retos completados y los despliegue*/
+                                    *//*Llamar a un fragment pasando el email, retos, posicion y retos completados y los despliegue*//*
                                     ver_jugador1.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -337,15 +344,7 @@ public class TabNameFragment extends Fragment {
                             }
                         }
                     });
-
-
-
-
-
-
-
-
-
+*/
         }
 
 

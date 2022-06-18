@@ -21,6 +21,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.internal.$Gson$Preconditions;
+import com.miguelcabezas.tfm.saltour.controller.ProfileSettingsController;
 import com.miguelcabezas.tfm.saltour.model.ChallengeListDTO;
 import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 import com.miguelcabezas.tfm.saltour.utils.SalLib;
@@ -81,7 +82,9 @@ public class ProfileActivity extends AppCompatActivity {
         iv_profilePhoto = findViewById(R.id.profile);
 
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/"+email+".jpg");
+        /*StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/"+email+".jpg");*/
+        ProfileSettingsController profileSettingsController = new ProfileSettingsController();
+        StorageReference storageRef = profileSettingsController.getProfilePic(email);
 
         try {
             final File localFile = File.createTempFile(email,"jpg");

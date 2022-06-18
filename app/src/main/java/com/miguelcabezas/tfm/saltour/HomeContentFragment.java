@@ -79,7 +79,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.hintview.ColorPointHintView;
+import com.miguelcabezas.tfm.saltour.controller.ProfileSettingsController;
 import com.miguelcabezas.tfm.saltour.controller.service.CountTimeService;
+import com.miguelcabezas.tfm.saltour.dao.DaoFirebaseImpl;
 import com.miguelcabezas.tfm.saltour.model.ActiveChallengeSingleton;
 import com.miguelcabezas.tfm.saltour.model.Challenge;
 import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
@@ -186,8 +188,10 @@ public class HomeContentFragment extends Fragment {
         final ArrayList<Map<String, GeoPoint>> myDataSet = new ArrayList<>();
         final ArrayList<Challenge> challenges = new ArrayList<>();
         /*final ArrayList<String> myDataSet=new ArrayList<>();*/
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference challenegesRef = db.collection("challenges");
+        DaoFirebaseImpl daoFirebase = new DaoFirebaseImpl();
+        final FirebaseFirestore db = daoFirebase.getDatabaseInstance();
+        /*final CollectionReference challenegesRef = db.collection("challenges");*/
+        final CollectionReference challenegesRef = daoFirebase.getCollectionReference(db,"challenges");
         final View finalLayout = layout;
         challenegesRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -273,8 +277,10 @@ public class HomeContentFragment extends Fragment {
             displayName=layout.findViewById(R.id.displayName);
             editProfilePanel=layout.findViewById(R.id.edit_profile_panel);
             displayName.setText(currentUser.getDisplayName().toString());
+            ProfileSettingsController profileSettingsController = new ProfileSettingsController();
+            profileSettingsController.setProfilePic(currentUser,getContext(),fotoperfil);
             /*FirebaseFirestore db = FirebaseFirestore.getInstance();*/
-            FirebaseStorage storage = FirebaseStorage.getInstance();
+            /*FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             final StorageReference pathReference = storageRef.child("images/"+ currentUser.getEmail().toString()+".jpg");
             Log.d("URL",pathReference.getDownloadUrl().toString());
@@ -287,7 +293,7 @@ public class HomeContentFragment extends Fragment {
                     Log.d("URL", downloadUrl.toString());
                     Picasso.with(getContext()).load(downloadUrl).into(fotoperfil);
                 }
-            });
+            });*/
 
             editProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -533,15 +539,9 @@ public class HomeContentFragment extends Fragment {
             public void onClick(View v) {
                 String nuevoUsuario=e_user.getText().toString();
                 final String nuevaContrasena=e_new_passwd.getText().toString();
+                ProfileSettingsController profileSettingsController = new ProfileSettingsController();
                 if(nuevoUsuario!=null && !nuevoUsuario.isEmpty()){
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(nuevoUsuario)
-                                .build();
-                        FirebaseUser currentUser = mAuth.getCurrentUser();
-                        currentUser.reload();
-                        currentUser.updateProfile(profileUpdates);
-                        TextView displayName = layout.findViewById(R.id.displayName);
-                        displayName.setText(nuevoUsuario);
+                        profileSettingsController.updateUserName(nuevoUsuario,mAuth);
                 }
                 if(nuevaContrasena!=null && !nuevaContrasena.isEmpty()){
                     if(nuevaContrasena.length()<8){
@@ -549,33 +549,7 @@ public class HomeContentFragment extends Fragment {
                         e_new_passwd.setBackgroundResource(R.drawable.borderojo);
                         return;
                     }
-                    final FirebaseUser currentUser = mAuth.getCurrentUser();
-                    AuthCredential credential = EmailAuthProvider
-                            .getCredential(currentUser.getEmail(), e_old_passwd.getText().toString());
-                    currentUser.reauthenticate(credential)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        currentUser.updatePassword(nuevaContrasena).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(getContext(),getString(R.string.password_actualizada),Toast.LENGTH_LONG).show();
-                                                    Intent intent=new Intent(getContext(),LoginActivity.class);
-                                                    startActivity(intent);
-                                                    mAuth.signOut();
-                                                    getActivity().finish();
-                                                } else {
-                                                    Toast.makeText(getContext(),getString(R.string.password_no_actualizada),Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(getContext(),getString(R.string.error_autenticacion),Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
+                    profileSettingsController.updateUserPassword(nuevaContrasena,e_old_passwd.getText().toString(),mAuth,getContext(),getActivity());
                 }
                 LinearLayout editProfilePanel = layout.findViewById(R.id.edit_profile_panel);
                 editProfilePanel.setVisibility(View.INVISIBLE);
@@ -898,13 +872,13 @@ public class HomeContentFragment extends Fragment {
   private void updateUserData(final String emailUser, final String challengeName){
 
       if(!(emailUser.equalsIgnoreCase("invitado@testsaltour.com"))){
-          FirebaseFirestore db = FirebaseFirestore.getInstance();
+          ProfileSettingsController profileSettingsController = new ProfileSettingsController();
+          profileSettingsController.updateUserChallengesAndProcessAR(emailUser,challengeName,getContext(),getActivity());
+          /*FirebaseFirestore db = FirebaseFirestore.getInstance();
           CollectionReference dbUsers = db.collection("users");
 
           final DocumentReference userSelected = db.collection("users").document(emailUser);
 
-          /*userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime"))+difference)/(((Long)document.get("challengesCompleted"))+1));*//*Esto lo hara la actividad de escaner en caso de reto completado*/
-          /*userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);*//*Esto lo hara la actividad de escaner en caso de reto completado*/
           userSelected.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
               @Override
               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -920,11 +894,11 @@ public class HomeContentFragment extends Fragment {
                           Log.e(entry.getKey(), String.valueOf(entry.getValue()));
                           set.add(entry.getKey()+"#"+String.valueOf(entry.getValue()));
                       }
-                      /*Revisar totalTime*/
-                      userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime")))/(((Long)document.get("challengesCompleted"))+1));//*Esto lo hara la actividad de escaner en caso de reto completado*/
-                      userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);//*Esto lo hara la actividad de escaner en caso de reto completado*/
+
+                      userSelected.update("challengesCompleted_totalTime",(((Long)document.get("totalTime")))/(((Long)document.get("challengesCompleted"))+1));
+                      userSelected.update("challengesCompleted",((Long)document.get("challengesCompleted"))+1);
                       userSelected.update("challengesAndTime",challengesAndTime);
-                      /*La actividad de escaner deberá actualizar SharedPreferences con lo siguiente (ya que se utiliza en la barra de progreso  -> updateProgressBar(...) , en jugar para marcar con colores y en estadisticas individuales*/
+
                       SharedPreferences myPrefs = getContext().getSharedPreferences("ChallenegesCompleted#"+emailUser, 0);
                       SharedPreferences.Editor editor = myPrefs.edit();
                       editor.putStringSet("ChallenegesCompleted#"+emailUser,set);
@@ -934,14 +908,13 @@ public class HomeContentFragment extends Fragment {
                       Toast.makeText(getContext(),challengeName+" COMPLETADO",Toast.LENGTH_LONG).show();
 
 
-                      /*AQUI LLAMAR A AR QUE DE DATOS DEL SITIO*/
                       Log.e("#################","TO AR");
                       Intent LaunchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.DefaultCompany.CharacterTalking");
                       startActivityForResult(LaunchIntent,2);
 
                   }
               }
-          });
+          });*/
       }else{
           Log.e("#################","TO AR invitado");
           Intent LaunchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.DefaultCompany.CharacterTalking");
@@ -983,7 +956,7 @@ public class HomeContentFragment extends Fragment {
 
 
     private void updateSharedPreferences(final String emailUser){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference dbUsers = db.collection("users");
 
         final DocumentReference userSelected = db.collection("users").document(emailUser);
@@ -1007,7 +980,9 @@ public class HomeContentFragment extends Fragment {
                     Toast.makeText(getContext(),getString(R.string.tiempo_detenido),Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        });*/
+        ProfileSettingsController profileSettingsController = new ProfileSettingsController();
+        profileSettingsController.updateSharedPreferences(emailUser,getContext());
     }
 
 

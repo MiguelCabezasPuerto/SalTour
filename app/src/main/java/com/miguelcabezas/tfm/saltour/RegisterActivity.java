@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.miguelcabezas.tfm.saltour.controller.AuthenticatonController;
 import com.miguelcabezas.tfm.saltour.utils.SalLib;
 
 import java.util.HashMap;
@@ -56,7 +57,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void onClickRegistro(View view){
-        String usuario_text=usuario.getText().toString().trim();
+        AuthenticatonController authenticatonController = new AuthenticatonController();
+        authenticatonController.registerWithMailAndPassword(usuario,contrasena,getApplicationContext(),mAuth,progressDialog,this);
+        /*String usuario_text=usuario.getText().toString().trim();
         String contrasena_text=contrasena.getText().toString().trim();
         if(usuario_text.isEmpty()){
             Toast.makeText(this,getString(R.string.introducir_email),Toast.LENGTH_LONG).show();
@@ -130,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                     newUser.put("totalTime", 0);
                                                                     newUser.put("challengesAndTime",new HashMap<String,String>());
                                                                     db.collection("users").document(currentUser.getEmail()).set(newUser);
-                                                                    /*db.collection("users").add(newUser);*/
+                                                                    *//*db.collection("users").add(newUser);*//*
                                                                     Toast.makeText(RegisterActivity.this,getString(R.string.enviada_verificacion),Toast.LENGTH_LONG).show();
                                                                     Intent returnIntent=new Intent();
                                                                     setResult(RESULT_OK,returnIntent);
@@ -160,13 +163,13 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         progressDialog.dismiss();
                     }
-                });
+                });*/
 
     }
-    private boolean validarEmail(String email) {
+    /*private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
-    }
+    }*/
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         boolean handleReturn = super.dispatchTouchEvent(ev);

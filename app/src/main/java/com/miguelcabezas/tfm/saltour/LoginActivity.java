@@ -71,6 +71,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.rpc.context.AttributeContext;
+import com.miguelcabezas.tfm.saltour.controller.AuthenticatonController;
 import com.miguelcabezas.tfm.saltour.model.User;
 import com.miguelcabezas.tfm.saltour.utils.SalLib;
 import com.miguelcabezas.tfm.saltour.view.ExpandableListDataPumpRanking;
@@ -100,6 +101,7 @@ public class LoginActivity extends AppCompatActivity{
             CODIGO_PERMISOS_ALMACENAMIENTO = 2;
     private int RC_SIGN_IN = 5;
     private final int REGISTER_REQUEST_CODE = 6;
+    AuthenticatonController authenticatonController;
     // Banderas que indicarán si tenemos permisos
     private boolean tienePermisoCamara = false,
             tienePermisoAlmacenamiento = false;
@@ -162,7 +164,9 @@ public class LoginActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(),"Instrucciones para restauración de contraseña enviadas",Toast.LENGTH_LONG).show();
         }
         if(requestCode == RC_SIGN_IN){
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            AuthenticatonController authenticatonController = new AuthenticatonController();
+            authenticatonController.loginWWithGoogleAccount(data,getApplicationContext(),mAuth,this);
+            /*Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             if(task.isSuccessful()){
                 try {
                     GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -172,14 +176,14 @@ public class LoginActivity extends AppCompatActivity{
                 }
             }else{
                 Toast.makeText(getApplicationContext(),"Ocurrió un error. "+task.getException().toString(),Toast.LENGTH_LONG).show();
-            }
+            }*/
         }
         if(requestCode == REGISTER_REQUEST_CODE && resultCode == RESULT_OK){
             Log.d("TAG","Registro realizado");
         }
     }
 
-    private void firebaseAuthWithGoogle(String idToken){
+    /*private void firebaseAuthWithGoogle(String idToken){
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -250,7 +254,7 @@ public class LoginActivity extends AppCompatActivity{
                                                                             newUser.put("totalTime", 0);
                                                                             newUser.put("challengesAndTime",new HashMap<String,String>());
                                                                             db.collection("users").document(currentUser.getEmail()).set(newUser);
-                                                                            /*db.collection("users").add(newUser);*/
+                                                                            db.collection("users").add(newUser);
                                                                         }
                                                                     }
                                                                 });
@@ -294,12 +298,14 @@ public class LoginActivity extends AppCompatActivity{
                         }
                     }
                 });
-    }
+    }*/
 
 
 
     public void onClickLoginInvitado(View view){
-        mAuth.signInWithEmailAndPassword("Invitado@testsaltour.com","12345678")
+        authenticatonController = new AuthenticatonController();
+        authenticatonController.loginAsGuest(mAuth,getApplicationContext(),usuario,contrasena,this,progressDialog);
+        /*mAuth.signInWithEmailAndPassword("Invitado@testsaltour.com","12345678")
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -317,11 +323,15 @@ public class LoginActivity extends AppCompatActivity{
                         }
                         progressDialog.dismiss();
                     }
-                });
+                });*/
     }
 
     public void onClickLogin(View view){
-        final String usuario_text=usuario.getText().toString().trim();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+        AlertDialog.Builder confirmacion = new AlertDialog.Builder(LoginActivity.this);
+        AuthenticatonController authenticatonController = new AuthenticatonController();
+        authenticatonController.loginWithUserAndPassword(usuario,contrasena,getApplicationContext(),progressDialog,mAuth,this,confirmacion);
+        /*final String usuario_text=usuario.getText().toString().trim();
         String contrasena_text=contrasena.getText().toString().trim();
         if(usuario_text.isEmpty()){
             Toast.makeText(this,getString(R.string.introducir_email),Toast.LENGTH_LONG).show();
@@ -450,7 +460,7 @@ public class LoginActivity extends AppCompatActivity{
                         }
                         progressDialog.dismiss();
                     }
-                });
+                });*/
     }
     public void onClickRegistro(View view){
         Intent intent=new Intent(getApplicationContext(),RegisterActivity.class);
@@ -558,10 +568,10 @@ public class LoginActivity extends AppCompatActivity{
                     }
                 });*/
     }
-    private boolean validarEmail(String email) {
+    /*private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
-    }
+    }*/
 
 
     private void verificarYPedirPermisosDeCamara() {

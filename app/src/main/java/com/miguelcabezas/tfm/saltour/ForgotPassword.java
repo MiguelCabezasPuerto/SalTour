@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.miguelcabezas.tfm.saltour.controller.AuthenticatonController;
 
 import java.util.regex.Pattern;
 
@@ -28,8 +29,9 @@ public class ForgotPassword extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
     public void onClickResetear(View view){
-
-        if(recuperacion.getText().toString().isEmpty()){
+        AuthenticatonController authenticatonController = new AuthenticatonController();
+        authenticatonController.recoverPassword(recuperacion,getApplicationContext(),this);
+        /*if(recuperacion.getText().toString().isEmpty()){
             Toast.makeText(this,getString(R.string.introducir_email),Toast.LENGTH_LONG).show();
             return;
         }
@@ -47,10 +49,10 @@ public class ForgotPassword extends AppCompatActivity {
                             finish();
                         }
                     }
-                });
+                });*/
     }
-    private boolean validarEmail(String email) {
+    /*private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
-    }
+    }*/
 }

@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcabezas.tfm.saltour.R;
+import com.miguelcabezas.tfm.saltour.dao.DaoSharedPreferencesImpl;
 import com.miguelcabezas.tfm.saltour.model.User;
 import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 
@@ -36,7 +37,9 @@ public class ExpandableListDataPumpRanking {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         User user = new User();
         /*Recuperar de BBDD los retos completados con su tiempo*/
-        SharedPreferences myPrefs = context.getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);
+        /*SharedPreferences myPrefs = context.getSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(), 0);*/
+        DaoSharedPreferencesImpl daoSharedPreferences = new DaoSharedPreferencesImpl();
+        SharedPreferences myPrefs = daoSharedPreferences.getChallengesCompletedSharedPreferences("ChallenegesCompleted#"+currentUser.getEmail(),context);
         Set<String> challengesAndTime = myPrefs.getStringSet("ChallenegesCompleted#"+currentUser.getEmail(),null);
         if(challengesAndTime!=null && !challengesAndTime.isEmpty()){
             List<String> items = new ArrayList<>(challengesAndTime);

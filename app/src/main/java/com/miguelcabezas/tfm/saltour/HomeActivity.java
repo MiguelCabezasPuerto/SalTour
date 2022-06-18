@@ -45,6 +45,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.miguelcabezas.tfm.saltour.controller.CommunicationController;
+import com.miguelcabezas.tfm.saltour.controller.ProfileSettingsController;
 import com.miguelcabezas.tfm.saltour.utils.SalLib;
 
 import java.io.File;
@@ -212,6 +214,12 @@ public class HomeActivity extends AppCompatActivity
 
   public void mandarCorreo(View view){
     String cuerpoCorreo="A doubt";
+    String email="miguelcabezaspuerto@gmail.com";
+    String asubto = "FaQ SalTour";
+    CommunicationController communicationController = new CommunicationController();
+    communicationController.sendMail(email,asubto,cuerpoCorreo,view,getApplicationContext());
+
+    /*String cuerpoCorreo="A doubt";
 
 
     String email="miguelcabezaspuerto@gmail.com";
@@ -227,7 +235,7 @@ public class HomeActivity extends AppCompatActivity
       Toast msg= Toast.makeText(this,"Sin cliente de correo",Toast.LENGTH_LONG);
       msg.setGravity(Gravity.CENTER, 0, 0);
       msg.show();
-    }
+    }*/
   }
 
   public void onClickImagen(View view){
@@ -253,9 +261,10 @@ public class HomeActivity extends AppCompatActivity
 
       String path= cursor.getString(column_index);
 
+      ProfileSettingsController profileSettingsController = new ProfileSettingsController();
+      profileSettingsController.updatePorfilePic(path,mAuth,getApplicationContext());
 
-
-      FirebaseUser currentUser = mAuth.getCurrentUser();
+      /*FirebaseUser currentUser = mAuth.getCurrentUser();
 
       FirebaseStorage storage = FirebaseStorage.getInstance();
       StorageReference storageRef = storage.getReference();
@@ -274,7 +283,7 @@ public class HomeActivity extends AppCompatActivity
           // ...
           Toast.makeText(getApplicationContext(),"SUCCESS IMAGE",Toast.LENGTH_LONG).show();
         }
-      });
+      });*/
     }
 
   }
