@@ -1,0 +1,10 @@
+com.miguelcabezas.tfm.saltour
+com.miguelcabezas.tfm.saltour.controller
+com.miguelcabezas.tfm.saltour.controller.events
+com.miguelcabezas.tfm.saltour.controller.service
+com.miguelcabezas.tfm.saltour.dao
+com.miguelcabezas.tfm.saltour.model
+com.miguelcabezas.tfm.saltour.utils
+com.miguelcabezas.tfm.saltour.view
+com.miguelcabezas.tfm.saltour.view.adapter
+com.miguelcabezas.tfm.saltour.view.animation
