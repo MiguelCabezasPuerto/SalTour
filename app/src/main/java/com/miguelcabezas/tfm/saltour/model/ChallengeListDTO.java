@@ -1,5 +1,10 @@
 package com.miguelcabezas.tfm.saltour.model;
 
+/**
+ * Clase modelo de transferencia de datos con base de datos y DAO para la elaboración de la clasificación
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class ChallengeListDTO {
     private String name;
     private String time;

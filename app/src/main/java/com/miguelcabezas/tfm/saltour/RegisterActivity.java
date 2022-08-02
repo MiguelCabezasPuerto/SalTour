@@ -38,6 +38,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * Vista que recoge las opciones de registro en la aplicación
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class RegisterActivity extends AppCompatActivity {
     private EditText usuario,contrasena;
     private Button registro;
@@ -56,6 +61,10 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * Escucha el eveto de pulsación del botón de registro y llama al controlador para continuar el proceso
+     * @param view botón de registro
+     */
     public void onClickRegistro(View view){
         AuthenticatonController authenticatonController = new AuthenticatonController();
         authenticatonController.registerWithMailAndPassword(usuario,contrasena,getApplicationContext(),mAuth,progressDialog,this);

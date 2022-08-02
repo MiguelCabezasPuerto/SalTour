@@ -51,6 +51,11 @@ import com.miguelcabezas.tfm.saltour.utils.SalLib;
 
 import java.io.File;
 
+/**
+ * Vista de menú lateral
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener {
@@ -128,6 +133,10 @@ public class HomeActivity extends AppCompatActivity
     }
   }
 
+  /**
+   * Escucha por el evento de pulsación de una opción de menú
+   * @param menuItem opción de menú seleccionada
+   */
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
     int title;
@@ -180,11 +189,19 @@ public class HomeActivity extends AppCompatActivity
     return true;
   }
 
+  /**
+   * Escucha por el evento de cambio en la posición del drawer
+   * @param view vista del menú
+   */
   @Override
   public void onDrawerSlide(@NonNull View view, float v) {
     //cambio en la posición del drawer
   }
 
+  /**
+   * Escucha por el evento de despliegue del menú lateral
+   * @param view vista del menú
+   */
   @Override
   public void onDrawerOpened(@NonNull View view) {
     //el drawer se ha abierto completamente
@@ -202,6 +219,10 @@ public class HomeActivity extends AppCompatActivity
 
   }
 
+  /**
+   * Escucha por el evento de cerrado del menú lateral
+   * @param view vista del menú
+   */
   @Override
   public void onDrawerClosed(@NonNull View view) {
     //el drawer se ha cerrado completamente
@@ -212,6 +233,10 @@ public class HomeActivity extends AppCompatActivity
     //cambio de estado, puede ser STATE_IDLE, STATE_DRAGGING or STATE_SETTLING
   }
 
+  /**
+   * Escucha por el evento de pulsación del botón de enviar un email
+   * @param view botón de mandar correo
+   */
   public void mandarCorreo(View view){
     String cuerpoCorreo="A doubt";
     String email="miguelcabezaspuerto@gmail.com";
@@ -238,6 +263,10 @@ public class HomeActivity extends AppCompatActivity
     }*/
   }
 
+  /**
+   * Escucha por el evento de pulsación del botón de seleccionar una imagen de perfil de usuario de la galería
+   * @param view botón de mandar correo
+   */
   public void onClickImagen(View view){
     Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
     startActivityForResult(gallery, PICK_IMAGE);
@@ -339,9 +368,13 @@ public class HomeActivity extends AppCompatActivity
   }
 
   private void permisoDeCamaraDenegado() {
-    Log.d("DENEGADO","CÁMARA");
+    Log.d("DENEGADO","CAMARA");
   }
 
+  /**
+   * Escucha por el evento de pulsación de la pantalla para ocultar el teclado
+   * @param ev Evento de toque
+   */
   @Override
   public boolean dispatchTouchEvent(MotionEvent ev) {
     boolean handleReturn = super.dispatchTouchEvent(ev);

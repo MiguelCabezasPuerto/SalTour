@@ -3,6 +3,12 @@ package com.miguelcabezas.tfm.saltour.model;
 import java.util.ArrayList;
 import java.util.Map;
 
+
+/**
+ * Clase modelo de información de datos del usuario, personales y de sus retos
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class User {
     private String email;
     private int challengesCompleted;

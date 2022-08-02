@@ -45,6 +45,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Gestiona la compleción de la vista en cada uno de los tabs
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class TabNameFragment extends Fragment {
     private static final String ARG_TAB_NAME = "ARG_TAB_NAME";
 
@@ -66,6 +71,15 @@ public class TabNameFragment extends Fragment {
         return frg;
     }
 
+    /**
+     * Crea una vista u otra en función del tab.
+     * En caso de ser individual despliega una lista con retos completados y en curso del jugador.
+     * EN caso de ser el ránking llama al controlador para elaborar una clasificación en función de los datos almacenados en base de datos
+     * @param inflater gestor de la vista a elaborar
+     * @param container contenedor de las vistas
+     * @param savedInstanceState estado del fragment
+     * @return vista creada
+     */
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable
             Bundle savedInstanceState) {

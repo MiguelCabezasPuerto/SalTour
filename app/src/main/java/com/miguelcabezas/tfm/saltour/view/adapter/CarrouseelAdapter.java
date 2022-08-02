@@ -7,6 +7,11 @@ import android.widget.ImageView;
 import com.jude.rollviewpager.adapter.StaticPagerAdapter;
 import com.miguelcabezas.tfm.saltour.R;
 
+/**
+ * Clase que gestiona la ruleta de imágenes y sus transiciones
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class CarrouseelAdapter extends StaticPagerAdapter {
     private int[] imagenes = {
             R.drawable.img_rana,

@@ -43,19 +43,40 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Clase encargada de manejar los datos del usuario así como sus retos
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class ProfileSettingsController {
     public ProfileSettingsController(){}
-
+    /**
+     * Actualiza la imagen de perfil del usuario llamando al DAO de base de datos
+     * @param path Ruta a la imagen de perfil en el repositorio de Google
+     * @param mAuth Referencia a la autenticación de usuario
+     * @param context contexto desde el que se invoca al método
+     */
     public void updatePorfilePic(String path, final FirebaseAuth mAuth, final Context context) {
         DaoFirebaseImpl daoFirebase = new DaoFirebaseImpl();
         daoFirebase.updateProfilePic(path,mAuth,context);
     }
+    /**
+     * Recupera la imagen de perfil del usuario llamando al DAO de base de datos
+     * @param email Dirección de correo del usuario del que se quiere recuperar la foto de perfil
+     * @return Referencia a la imagen recuperada
+     */
     public StorageReference getProfilePic(String email){
         String path = "images/"+email+".jpg";
         DaoFirebaseImpl daoFirebase = new DaoFirebaseImpl();
         return
                 daoFirebase.getPicFromStorage(path);
     }
+    /**
+     * Establece la foto de perfil del usuario y la transifere a la vista
+     * @param currentUser Usuario activo
+     * @param context contexto desde el que se invoca al método
+     * @param fotoperfil Vista sobre la que transferir la imagen
+     */
     public void setProfilePic(FirebaseUser currentUser, final Context context, final ImageView fotoperfil){
         DaoFirebaseImpl daoFirebase = new DaoFirebaseImpl();
         FirebaseStorage storage = daoFirebase.getStorageInstance();
@@ -75,6 +96,14 @@ public class ProfileSettingsController {
         });
     }
 
+    /**
+     * Actualiza la contraseña del usuario llamando al DAO de base de datos
+     * @param nuevaContrasena Nueva contraseña a establecer
+     * @param antiguaContrasena Contraseña a cambiar
+     * @param mAuth Referencia a la autenticación de usuario
+     * @param context contexto desde el que se invoca al método
+     * @param activity actividad desde la que se invoca al método
+     */
     public void updateUserPassword(final String nuevaContrasena, String antiguaContrasena, final FirebaseAuth mAuth, final Context context, final Activity activity){
         if(nuevaContrasena!=null && !nuevaContrasena.isEmpty()){
             final FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -107,6 +136,11 @@ public class ProfileSettingsController {
                     });
         }
     }
+    /**
+     * Actualiza el nickname del usuario llamando al DAO de base de datos
+     * @param nuevoUsuario Nuevo nickname a establecer
+     * @param mAuth Referencia a la autenticación de usuario
+     */
     public void updateUserName(String nuevoUsuario, FirebaseAuth mAuth){
         if(nuevoUsuario!=null && !nuevoUsuario.isEmpty()){
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -117,6 +151,11 @@ public class ProfileSettingsController {
         }
     }
 
+    /**
+     * Actualiza las shared preferences del usuario llamando al DAO
+     * @param emailUser Email del usuario a actualizar
+     * @param context contexto desde el que se invoca al método
+     */
     public void updateSharedPreferences(final String emailUser, final Context context){
         DaoFirebaseImpl daoFirebase = new DaoFirebaseImpl();
         FirebaseFirestore db = daoFirebase.getDatabaseInstance();
@@ -150,6 +189,13 @@ public class ProfileSettingsController {
         });
     }
 
+    /**
+     * Actualiza los retos completados del usuario en base de datos una vez termina uno llamando al DAO. Posteriormente lanza la acción para mostrar la realidad aumentada
+     * @param emailUser Email del usuario a actualizar
+     * @param challengeName Nombre del reto a actualizar
+     * @param context contexto desde el que se invoca al método
+     * @param activity actividad desde la que se invoca al método
+     */
     public void updateUserChallengesAndProcessAR(final String emailUser,final String challengeName, final Context context, final Activity activity){
         final DaoFirebaseImpl daoFirebase = new DaoFirebaseImpl();
         FirebaseFirestore db = daoFirebase.getDatabaseInstance();

@@ -13,6 +13,12 @@ import com.miguelcabezas.tfm.saltour.R;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Clase que gestiona los desplegables de preguntas frecuentes.
+ * Documentación homóloga a la recogida en CustomExpandableListAdapter
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class CustomExpandableListAdapterHelp extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expandableListTitle;

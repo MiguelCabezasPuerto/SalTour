@@ -18,6 +18,11 @@ import com.miguelcabezas.tfm.saltour.controller.AuthenticatonController;
 
 import java.util.regex.Pattern;
 
+/**
+ * Vista de olvido de contraseña
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class ForgotPassword extends AppCompatActivity {
     private EditText recuperacion;
     @Override
@@ -28,6 +33,10 @@ public class ForgotPassword extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
+    /**
+     * Escucha por el evento de pulsación de botón de reseteo de contraseña
+     * @param view otón de reseteo de contraseña
+     */
     public void onClickResetear(View view){
         AuthenticatonController authenticatonController = new AuthenticatonController();
         authenticatonController.recoverPassword(recuperacion,getApplicationContext(),this);

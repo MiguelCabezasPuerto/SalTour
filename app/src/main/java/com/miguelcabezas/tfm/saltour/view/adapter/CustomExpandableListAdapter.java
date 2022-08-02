@@ -15,6 +15,11 @@ import com.miguelcabezas.tfm.saltour.R;
 import com.miguelcabezas.tfm.saltour.utils.EnumRetos;
 import com.miguelcabezas.tfm.saltour.utils.SalLib;
 
+/**
+ * Clase que gestiona los desplegables de retos del usuario
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expandableListTitle;
@@ -38,6 +43,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         return expandedListPosition;
     }
 
+    /**
+     * Construye la vista de cada elemento del desplegable
+     * @param listPosition posición del elemento en la lista
+     * @param isLastChild Si es o no el último elemento
+     * @param convertView diseño de la vista a mostrar en cada elemento
+     * @param parent vista padre
+     * @return Cada elemento del desplegable
+     */
     @Override
     public View getChildView(int listPosition, final int expandedListPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
@@ -69,6 +82,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    /**
+     * Devuelve el número de elementos dentro de cada elemento de la lista
+     * @param listPosition posición del elemento a inspeccionar
+     * @return Número de elementos dentro de cada elemento de la lista
+     */
     @Override
     public int getChildrenCount(int listPosition) {
         return this.expandableListDetail.get(this.expandableListTitle.get(listPosition))

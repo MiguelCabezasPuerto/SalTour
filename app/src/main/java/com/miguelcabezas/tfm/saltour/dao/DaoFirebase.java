@@ -13,6 +13,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+/**
+ * Interfaz a partir de la cual construir los DAO de acceso a los datos de usuario y retos en base de datos
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public interface DaoFirebase {
     void updateProfilePic(String path, FirebaseAuth auth, Context context);
     StorageReference getPicFromStorage(String path);

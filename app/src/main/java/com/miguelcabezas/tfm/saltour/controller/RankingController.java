@@ -34,8 +34,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Clase encargada de recuperar las puntuaciones de los usuarios y establecer una clasificación
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class RankingController {
-
+    /**
+     * Recupera de forma ordenada ascendente el campo el documento asociado a la relación entre el número de retos completados y el tiempo total empleado en todos los retos.
+     * Posteriormente establece el nickname de cada jugador en las tres primeras posiciones y la posición propia del jugador de tal forma que si este ocupa una de estas tres primeras posiciones, lo cuadra en una de ellas marcándolo con un distintivo
+     * @param context contexto desde el que se invoca al método
+     * @param activity actividad desde la que se invoca al método
+     * @param t_jugador1 referencia al cuadro de texto del nombre del jugador en primera posición
+     * @param t_jugador2 referencia al cuadro de texto del nombre del jugador en segunda posición
+     * @param t_jugador3 referencia al cuadro de texto del nombre del jugador en tercera posición
+     * @param t_jugador referencia al cuadro de texto del nombre del propio jugador
+     * @param desafios_jugador_1 referencia al cuadro de texto del número de desafíos completados del jugador en primera posición
+     * @param desafios_jugador_2 referencia al cuadro de texto del número de desafíos completadose del jugador en segunda posición
+     * @param desafios_jugador_3 referencia al cuadro de texto del número de desafíos completados del jugador en tercera posición
+     * @param desafios_jugador referencia al cuadro de texto del número de desafíos completados del propio jugador
+     * @param tiempo_jugador_1 referencia al cuadro de texto del tiempo empleado del jugador en primera posición
+     * @param tiempo_jugador_2 referencia al cuadro de texto del tiempo empleado del jugador en segunda posición
+     * @param tiempo_jugador_3 referencia al cuadro de texto del tiempo empleado del jugador en tercera posición
+     * @param tiempo_jugador referencia al cuadro de texto del tiempo empleado  del propio jugador
+     * @param t_activos referencia al cuadro de texto del número de jugadores activos en la aplicación
+     * @param c_jugador1 referencia al cardview del jugador en primera posición
+     * @param c_jugador2 referencia al cardview  del jugador en segunda posición
+     * @param c_jugador3 referencia al cardview del jugador en tercera posición
+     * @param c_jugador referencia al cardview del propio jugador
+     *  @param ver_jugador1 referencia al botón para ver el perfil del jugador en primera posición
+     *  @param ver_jugador2 referencia al botón para ver el perfil del jugador en segunda posición
+     *  @param ver_jugador3 referencia al botón para ver el perfil del jugador en tercera posición
+     */
     public void processRanking(final Context context, final Activity activity, final TextView t_jugador1, final TextView t_jugador2, final TextView t_jugador3, final TextView t_jugador, final TextView desafios_jugador_1, final TextView desafios_jugador_2, final TextView desafios_jugador_3, final TextView desafios_jugador,
                                final TextView tiempo_jugador_1, final TextView tiempo_jugador_2, final TextView tiempo_jugador_3, final TextView tiempo_jugador, final TextView t_activos, final CardView c_jugador1, final CardView c_jugador2, final CardView c_jugador3, final CardView c_jugador,
                                final ImageView ver_jugador1, final ImageView ver_jugador2, final ImageView ver_jugador3){

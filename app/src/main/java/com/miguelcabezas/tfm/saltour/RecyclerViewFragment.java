@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gestiona mostrar el listado de elementos compuestos en un recycler view
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class RecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable

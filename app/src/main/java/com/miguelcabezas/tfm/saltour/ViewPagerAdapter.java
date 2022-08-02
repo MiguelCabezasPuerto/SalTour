@@ -11,6 +11,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Gestiona la creación de vistas en tabs
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class ViewPagerAdapter extends FragmentStateAdapter {
     enum Tab {
 

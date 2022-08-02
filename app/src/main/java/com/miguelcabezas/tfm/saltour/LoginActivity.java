@@ -86,7 +86,11 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import android.os.Bundle;
 
-
+/**
+ * Vista con las diferentes opciones de login
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class LoginActivity extends AppCompatActivity{
 
     private FirebaseAuth mAuth;
@@ -105,6 +109,9 @@ public class LoginActivity extends AppCompatActivity{
     // Banderas que indicarán si tenemos permisos
     private boolean tienePermisoCamara = false,
             tienePermisoAlmacenamiento = false;
+    /**
+     * Construcción de la vista
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -634,7 +641,7 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void permisoDeCamaraDenegado() {
-        Log.d("DENEGADO","CÁMARA");
+        Log.d("DENEGADO","CAMARA");
     }
 
     @Override

@@ -10,6 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * Gestiona mostrar el listado de elementos simples en un recycler view
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class SimpleTextRecyclerViewAdapter extends RecyclerView.Adapter<TextViewHolder>{
     private final List<String> items;
     private final LayoutInflater inflater;

@@ -36,7 +36,11 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * Clase que gestiona la vista de mostrar un listado de retos
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.ViewHolder>{
     private ArrayList<Map<String,GeoPoint>> mDataSet;
     Context context;
@@ -47,8 +51,11 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
     FragmentActivity parentActivity;
     View fromView;
 
-    // Obtener referencias de los componentes visuales para cada elemento
-    // Es decir, referencias de los EditText, TextViews, Buttons
+    /**
+     * Clase que obtiene referencias de los componentes visuales para cada elemento, es decir, referencias de los EditText, TextViews, Buttons
+     * @author Miguel Cabezas Puerto
+     *
+     * */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // en este ejemplo cada elemento consta solo de un título
         public CardView cardView;
@@ -59,7 +66,7 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
         }
     }
 
-    // Este es nuestro constructor (puede variar según lo que queremos mostrar)
+
     public AdapterChallenges(ArrayList<Map<String,GeoPoint>> myDataSet,Context context,ArrayList<Challenge>challenges,LayoutInflater inflater,ViewGroup container,FragmentActivity activity,View view) {
         mDataSet = myDataSet;
         this.context = context;
@@ -71,8 +78,11 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
         this.fromView = view;
     }
 
-    // El layout manager invoca este método
-    // para renderizar cada elemento del RecyclerView
+    /**
+     * El layout manager invoca este método para renderizar cada elemento del RecyclerView
+     * @param parent
+     * @return Vista a devolver
+     */
     @Override
     public AdapterChallenges.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
@@ -80,16 +90,19 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_challenge_item, parent, false);
 
-        // Aquí podemos definir tamaños, márgenes, paddings
-        // ...
+
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
 
-    // Este método reemplaza el contenido de cada view,
-    // para cada elemento de la lista (nótese el argumento position)
+    /**
+     * Este método reemplaza el contenido de cada view, para cada elemento de la lista (nótese el argumento position)
+     * @param holder vista
+     * @param position posición de la vista en el listado
+     * @return Vista a devolver
+     */
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -174,13 +187,20 @@ public class AdapterChallenges extends RecyclerView.Adapter<AdapterChallenges.Vi
         textView.setText(mDataSet.get(position).keySet().toArray()[0].toString());
     }
 
-    // Método que define la cantidad de elementos del RecyclerView
-    // Puede ser más complejo (por ejemplo si implementamos filtros o búsquedas)
+
+    /**
+     * Este método define la cantidad de elementos del RecyclerView
+     * @return Número de elementos en el listado
+     */
     @Override
     public int getItemCount() {
         return mDataSet.size();
     }
 
+    /**
+     * Comprueba si el servicio de conteo de tiempo está activo
+     * @return Está un reto en curso
+     */
     private boolean isAServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) parentActivity.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

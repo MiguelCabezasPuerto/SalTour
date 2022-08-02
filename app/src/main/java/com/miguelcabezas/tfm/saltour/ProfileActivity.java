@@ -35,6 +35,11 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Vista del perfil de usuarios
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class ProfileActivity extends AppCompatActivity {
 
     String email;
@@ -46,6 +51,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ArrayList<ChallengeListDTO> challengeListDTOS;
 
+    /**
+     * Crea la vista completando el nombre, foto de perfil, posici´pn en el ránking, retos completados y listado de estos
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

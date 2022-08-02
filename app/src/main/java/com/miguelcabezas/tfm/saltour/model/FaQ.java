@@ -1,5 +1,10 @@
 package com.miguelcabezas.tfm.saltour.model;
 
+/**
+ * Clase modelo de información de preguntas y respuestas frecuentes
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class FaQ {
     private String question;
     private String answer;

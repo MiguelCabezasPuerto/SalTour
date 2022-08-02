@@ -22,6 +22,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Vista de la representación del mapa en su integración con Google Maps
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -46,13 +51,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * Manipula el mapa una vez disponible.
+     * Esta devolución de llamada se activa cuando el mapa está listo para usarse.
+     * Se añade el marcador del reto seleccionado recuperando sus coordenadas
+     * Si los servicios de Google Play no están instalados en el dispositivo, se le pedirá al usuario que instale
+     * dentro del SupportMapFragment. Este método solo se activará una vez que el usuario haya
+     * instaló los servicios de Google Play y volvió a la aplicación.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {

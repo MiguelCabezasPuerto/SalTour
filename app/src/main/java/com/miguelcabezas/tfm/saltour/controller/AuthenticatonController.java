@@ -52,9 +52,23 @@ import java.util.regex.Pattern;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * Clase encargada de validar los medios de autenticación disponibles en la aplicación
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class AuthenticatonController {
     public AuthenticatonController(){}
 
+    /**
+     * Valida que el botón pulsado para login en la aplicación sea el de entrar como invitado, iniciando el flujo de arranque de la aplicación para este caso.
+     * @param mAuth Referencia a laautenticación dde usuario
+     * @param context Referencia al contexto de la vista
+     * @param usuario Referencia al cuadro de texto de usuario de la vista
+     * @param contrasena Referencia al cuadro de texto de contraseña de la vista
+     * @param activity Referencia a la actividad desde donde se invoca el método
+     * @param progressDialog Referencia al cuadro de progreso de la vista
+     */
     public void loginAsGuest(final FirebaseAuth mAuth, final Context context, final EditText usuario, final EditText contrasena, final Activity activity, final ProgressDialog progressDialog){
         mAuth.signInWithEmailAndPassword("Invitado@testsaltour.com","12345678")
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -78,6 +92,16 @@ public class AuthenticatonController {
                 });
     }
 
+    /**
+     * Valida que la contraseña introducida sea válida (al menos 8 caracteres) y que esta como el email introducidos existan en la base de datos de usuarios y además coincidan.
+     * En caso afirmativo recupera de base de datos la información vinculada al usuario así como los retos que tiene completados y en progreso y los transfiere a las shared preferences de dicho usuario activo
+     * @param mAuth Referencia a laautenticación dde usuario
+     * @param context Referencia al contexto de la vista
+     * @param usuario Referencia al cuadro de texto de usuario de la vista
+     * @param contrasena Referencia al cuadro de texto de contraseña de la vista
+     * @param activity Referencia a la actividad desde donde se invoca el método
+     * @param confirmacion Referencia al cuadro de alertas de la vista
+     */
     public void loginWithUserAndPassword(final EditText usuario, final EditText contrasena, final Context context, final ProgressDialog progressDialog, final FirebaseAuth mAuth, final Activity activity, final AlertDialog.Builder confirmacion){
         final String usuario_text=usuario.getText().toString().trim();
         String contrasena_text=contrasena.getText().toString().trim();
@@ -232,7 +256,13 @@ public class AuthenticatonController {
                     }
                 });
     }
-
+    /**
+     * Valida la correción del método de login mediante cuenta de Google
+     * @param mAuth Referencia a laautenticación dde usuario
+     * @param context Referencia al contexto de la vista
+     * @param data Datos de usuario
+     * @param activity Referencia a la actividad desde donde se invoca el método
+     */
     public void loginWWithGoogleAccount(Intent data, Context context,final FirebaseAuth mAuth,final Activity activity){
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
         if(task.isSuccessful()){
@@ -247,7 +277,14 @@ public class AuthenticatonController {
         }
     }
 
-
+    /**
+     * Valida que las credenciales de Google a partir del token sean válidas
+     * En caso afirmativo recupera de base de datos la información vinculada al usuario así como los retos que tiene completados y en progreso y los transfiere a las shared preferences de dicho usuario activo
+     * @param mAuth Referencia a laautenticación dde usuario
+     * @param context Referencia al contexto de la vista
+     * @param idToken Token de acceso a la cuenta de Google
+     * @param activity Referencia a la actividad desde donde se invoca el método
+     */
     private void firebaseAuthWithGoogle(String idToken, final FirebaseAuth mAuth, final Context context, final Activity activity){
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
         mAuth.signInWithCredential(credential)
@@ -367,6 +404,16 @@ public class AuthenticatonController {
                 });
     }
 
+    /**
+     * Valida que las credenciales introducidas sean válidas y no exista ningún usuario registrado con las mismas (mismo email)
+     * En caso afirmativo graba al usuario en la base de datos con foto de perfil por defecto y ningún reto completado. A mayores remite un correo de confirmación de registro
+     * @param mAuth Referencia a laautenticación dde usuario
+     * @param context Referencia al contexto de la vista
+     * @param usuario Referencia al cuadro de texto de usuario de la vista
+     * @param contrasena Referencia al cuadro de texto de contraseña de la vista
+     * @param activity Referencia a la actividad desde donde se invoca el método
+     * @param progressDialog Referencia al cuadro de progreso de la vista
+     */
     public void registerWithMailAndPassword(final EditText usuario, final EditText contrasena, final Context context, final FirebaseAuth mAuth, final ProgressDialog progressDialog, final Activity activity){
         String usuario_text=usuario.getText().toString().trim();
         String contrasena_text=contrasena.getText().toString().trim();
@@ -475,6 +522,12 @@ public class AuthenticatonController {
                 });
     }
 
+    /**
+     * Manda los pasos para la recuperación de la contraseña olvidada
+     * @param context Referencia al contexto de la vista
+     * @param recuperacion Referencia al cuadro de texto dela vista donde meter el correo al que mandar la recuperación de la contraseña olvidada
+     * @param activity Referencia a la actividad desde donde se invoca el método
+     */
     public void recoverPassword(final EditText recuperacion, final Context context, final Activity activity){
         if(recuperacion.getText().toString().isEmpty()){
             Toast.makeText(context,context.getString(R.string.introducir_email),Toast.LENGTH_LONG).show();
@@ -497,6 +550,11 @@ public class AuthenticatonController {
                 });
     }
 
+    /**
+     * Coprueba que la dirección email introducida casa con el patrón correcto determinado por las expresiones regulares provistas por Java
+     * @param email Dirección de correo a validar
+     * @return Validez del correo
+     */
     private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();

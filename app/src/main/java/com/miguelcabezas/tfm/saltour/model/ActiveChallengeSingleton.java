@@ -1,5 +1,10 @@
 package com.miguelcabezas.tfm.saltour.model;
 
+/**
+ * Clase modelo del reto activo en cada momento
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class ActiveChallengeSingleton {
     private String name;
     private static ActiveChallengeSingleton INSTANCE = null;

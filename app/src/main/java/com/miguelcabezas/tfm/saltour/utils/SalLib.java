@@ -14,18 +14,43 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Clase librería de funcionalidades auxiliares
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class SalLib {
 
+    /**
+     * Borra el último caracter de una cadena
+     * @param stringToCut cadena a tratar
+     * @return Cadena sin el ultimo caracter
+     */
     public static String removeLastCharacter(String stringToCut){
         return (stringToCut == null) ? null : stringToCut.replaceAll(".$", "");
     }
+    /**
+     * Convierte una cadena a Long
+     * @param stringToParse cadena a tratar
+     * @return Long de la cadena
+     */
     public static Long parseStringToLongSpecial(String stringToParse){
         String numberPart =  removeLastCharacter(stringToParse);
         return Long.parseLong(numberPart);
     }
+    /**
+     * Obtiene el ultimo caracter de una cadena
+     * @param stringToInspect cadena a tratar
+     * @return Ultimo caracter de una cadena en formato String
+     */
     public static String getLastCharacter(String stringToInspect){
         return stringToInspect.substring(stringToInspect.length() - 1);
     }
+    /**
+     * Convierte un mapa de valores en un array de valores
+     * @param mapToConvert mapa a tratar
+     * @return Listado de valores del mapa
+     */
     public static ArrayList<?>convertMapToArray(Map<?,?> mapToConvert){
         ArrayList<Object>arrayToReturn = new ArrayList<>();
 
@@ -39,6 +64,11 @@ public class SalLib {
         return arrayToReturn;
     }
 
+    /**
+     * Convierte un tiempo en formato timeMillis en su respectiva hora, minuto y segundo
+     * @param timeToConvert tiempo a tratar
+     * @return Tiempo en formato horas, minutos y segundos
+     */
     public static String convertToHHMMSS(Long timeToConvert){
         return String.format("%02d:%02d:%02d",
                 TimeUnit.MILLISECONDS.toHours(timeToConvert),
@@ -48,6 +78,13 @@ public class SalLib {
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeToConvert)));
     }
 
+    /**
+     * Oculta el teclado al pulsar cualquier otra parte de la pantalla
+     * @param ev Evento de toque
+     * @param context Contexto desde donde se invoca el método
+     * @param currentFocus Vista que se desea ocultar
+     * @param window Ventana de la vista a ocultar
+     */
     public static void hideKeyBoard(MotionEvent ev, Context context,View currentFocus, Window window){
         int x = (int) ev.getX();
         int y = (int) ev.getY();

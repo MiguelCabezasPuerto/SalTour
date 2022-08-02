@@ -23,7 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
-
+/**
+ * Servicio encargada de contabilizar el tiempo invertido por el usuario en un reto
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class CountTimeService extends Service {
 
     private ArrayList<Map<String,String>> challenegesAndTime;
@@ -46,6 +50,13 @@ public class CountTimeService extends Service {
 
     }
 
+    /**
+     * Arranca el conteo del tiempo para un reto y usuario dados
+     * @param intent Referencia desde donde se inoca el método
+     * @param flags
+     * @param startId
+     * @return Modo de arranque del hilo
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Servicio iniciado...");
@@ -61,7 +72,11 @@ public class CountTimeService extends Service {
         return START_NOT_STICKY;
     }
 
-    /*Si es destruido quiere decir que es llamado desde el activity de parar reto sin completar y por tanto el reto ha sido empezado e interrumpido sin ser completado*/
+    /**
+     * Se destruye el hilo
+     * Si es destruido quiere decir que es llamado desde el activity de parar reto sin completar y por tanto el reto ha sido empezado e interrumpido sin ser completado
+     * Actualiza tiempos para el reto y usuario dados en la base de datos
+     */
     @Override
     public void onDestroy() {
         Log.d(TAG, "Servicio destruido...");

@@ -1,5 +1,10 @@
 package com.miguelcabezas.tfm.saltour.model;
 
+/**
+ * Clase modelo de transferencia de datos con base de datos, contenedora de la información del reto
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class Challenge {
     String name;
     String latitude;

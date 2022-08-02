@@ -104,7 +104,11 @@ import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
 
-
+/**
+ * Fragment frontal reutilizable en función de la funcionalidad seleccionada por el usuario
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class HomeContentFragment extends Fragment {
 
   private static final String TEXT = "text";
@@ -145,6 +149,13 @@ public class HomeContentFragment extends Fragment {
     }
 
 
+    /**
+     * En función de los parámetros recibidos construye una vista u otra (las diferentes vistas del menú lateral de la aplicación)
+     * @param inflater gestor de la vista a construir
+     * @param container contenedor de la vista
+     * @param savedInstanceState estado de la instancia del fragment a partir del que se saben los datos recibidos
+     * @return vista construida
+     */
   @Override
   public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable
           Bundle savedInstanceState) {
@@ -486,11 +497,20 @@ public class HomeContentFragment extends Fragment {
       }
   }
 
+    /**
+     * Calcula porcentaje
+     * @param actual valor actual
+     * @param total total sobre el que calcular
+     * @return porcentaje del valor actual respecto al total
+     */
   private long calculatePercentage(long actual,long total){
       return (actual*100)/total;
   }
 
-
+    /**
+     * Destruye la sesión del usuario
+     * @param mAuth Referencia a la sesión del usuario
+     */
   private void logout(final FirebaseAuth mAuth) {
         new AlertDialog.Builder(getContext())
                 .setIcon(R.mipmap.ic_launcher)
@@ -524,7 +544,10 @@ public class HomeContentFragment extends Fragment {
                 }).show();
     }
 
-
+    /**
+     * Escucha el evento de pulsación del botón de guardado de los datos del usuario
+     * @param layout Botón de guardado
+     */
     private void onClickGuardar(final View layout) {
         final FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
@@ -560,12 +583,18 @@ public class HomeContentFragment extends Fragment {
     }
 
 
+    /**
+     * Reacciona al evento de pulsación del botón de compartir la aplicación por otros medios
+     */
     private void onClickCompartirOtros(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.te_desafio));
         startActivity(Intent.createChooser(intent, "Share with"));
     }
+    /**
+     * Reacciona al evento de pulsación del botón de compartir la aplicación por Facebook
+     */
     private void onClickCompartirFacebook(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -573,6 +602,9 @@ public class HomeContentFragment extends Fragment {
         intent.setPackage("com.facebook.katana");
         startActivity(intent);
     }
+    /**
+     * Reacciona al evento de pulsación del botón de compartir la aplicación por WhatsApp
+     */
     private void onClickCompartirWhatsApp(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -580,6 +612,9 @@ public class HomeContentFragment extends Fragment {
         intent.setPackage("com.whatsapp");
         startActivity(intent);
     }
+    /**
+     * Reacciona al evento de pulsación del botón de compartir la aplicación por Twitter
+     */
     private void onClickCompartirTwitter(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -587,6 +622,9 @@ public class HomeContentFragment extends Fragment {
         intent.setPackage("com.twitter.android");
         startActivity(intent);
     }
+    /**
+     * Reacciona al evento de pulsación del botón de compartir la aplicación por correo electrónico
+     */
     private void onClickCompartirCorreo(){
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("text/html");
@@ -600,7 +638,9 @@ public class HomeContentFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Crea los divisores entre elementos de un listado
+     */
     private void setupViewPager(View layout) {
         viewPager = layout.findViewById(R.id.viewpager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(),
@@ -616,6 +656,9 @@ public class HomeContentFragment extends Fragment {
             }
         });
     }
+    /**
+     * Crea la vista de tabs con dos apartados
+     */
     private void setupTabLayout(View layout) {
         tabLayout = layout.findViewById(R.id.tabs);
         new TabLayoutMediator(tabLayout, viewPager,
@@ -633,7 +676,9 @@ public class HomeContentFragment extends Fragment {
 
 
 
-
+    /**
+     * Inicia la vista para el escáner de un código QR. Escucha el evento de código QR detectado y realiza acciones en función del reto identificado (parar su tiempo y guardar datos)
+     */
     public void initQR(final SurfaceView cameraView) {
 
         // creo el detector qr
@@ -858,7 +903,10 @@ public class HomeContentFragment extends Fragment {
         });
 
     }
-
+    /**
+     * Comprueba si el servicio de conteo de tiempo de reto está activo
+     * @return Si el servicio está activo
+     */
     private boolean isAServiceRunning(Class<?> serviceClass) {
       ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
       for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -869,6 +917,11 @@ public class HomeContentFragment extends Fragment {
       return false;
   }
 
+    /**
+     * Llama al controlador para actualizar los datos de retos del usuario
+     * @param emailUser email del usuario afectado
+     * @param challengeName nombre del reto a actualizar
+     */
   private void updateUserData(final String emailUser, final String challengeName){
 
       if(!(emailUser.equalsIgnoreCase("invitado@testsaltour.com"))){
@@ -922,7 +975,12 @@ public class HomeContentFragment extends Fragment {
       }
 
   }
-
+    /**
+     * Genera una espera útil para dar tiempo a parar tiempos por el servicio de conteo. Pasado ese tiempo llama al controlador para realizar los guardados en base de datos
+     * @param milisegundos milisegundos de espera
+     * @param email email del usuario afectado
+     * @param challengeName nombre del reto a actualizar
+     */
     public Runnable esperarYActualizar(final int milisegundos, final String email, final String challengeName) {
       return new Runnable() {
           @Override
@@ -938,6 +996,12 @@ public class HomeContentFragment extends Fragment {
       };
     }
 
+    /**
+     * Genera una espera útil para dar tiempo a parar tiempos por el servicio de conteo. Pasado ese tiempo llama al controlador para realizar los guardados en shared preferences
+     * @param milisegundos milisegundos de espera
+     * @param email email del usuario afectado
+     * @param challengeName nombre del reto a actualizar
+     */
     public Runnable esperarYActualizarPreferences(final int milisegundos, final String email, final String challengeName) {
         return new Runnable() {
             @Override
@@ -954,7 +1018,10 @@ public class HomeContentFragment extends Fragment {
     }
 
 
-
+    /**
+     * Llama al controlador para actualizar los datos de shared preferences
+     * @param emailUser email del usuario afectado
+     */
     private void updateSharedPreferences(final String emailUser){
         /*FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference dbUsers = db.collection("users");

@@ -14,6 +14,11 @@ import com.miguelcabezas.tfm.saltour.model.ChallengeListDTO;
 
 import java.util.ArrayList;
 
+/**
+ * Clase que gestiona mostrar el listado de jugadores a modo clasificación
+ * @author Miguel Cabezas Puerto
+ *
+ * */
 public class CustomAdapterPlayerChallenges extends BaseAdapter {
 
     private final Context context;
@@ -24,11 +29,20 @@ public class CustomAdapterPlayerChallenges extends BaseAdapter {
         this.challengeListDTOS = challengeListDTOS;
     }
 
+    /**
+     * Devuelve el número de elementos del listado a mostrar
+     * @return número de elementos del listado
+     */
     @Override
     public int getCount() {
         return challengeListDTOS.size();
     }
 
+    /**
+     * Devuelve un elemento dentro del listado
+     * @param position posición del elemento en el listado
+     * @return Elemento dentro de la posición del listado
+     */
     @Override
     public Object getItem(int position) {
         return challengeListDTOS.get(position);
@@ -39,6 +53,13 @@ public class CustomAdapterPlayerChallenges extends BaseAdapter {
         return position;
     }
 
+    /**
+     * Devuelve un elemento dentro del listado y su información
+     * @param position posición del elemento en el listado
+     * @param convertView diseño de la vista a mostrar para cada elemento
+     * @param parent Vista padre del conjunto de vistas a mostrar (cada elemento)
+     * @return Vista a mostrar
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         HolderView holderView;
@@ -59,6 +80,11 @@ public class CustomAdapterPlayerChallenges extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * Clase que obtiene referencias de los componentes visuales para cada elemento, es decir, referencias de los EditText, TextViews, Buttons
+     * @author Miguel Cabezas Puerto
+     *
+     * */
     public static class HolderView{
         private final ImageView challengeImage;
         private final TextView challengeName;
